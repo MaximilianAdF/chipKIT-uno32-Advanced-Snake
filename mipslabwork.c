@@ -11,32 +11,82 @@
    For copyright and licensing, see file COPYING */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include <pic32mx.h>  /* Declarations of system-specific addresses etc */
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+#include "snake.h"
+int prime = 1234567;
 
 int mytime = 0x5957;
 
 char textstring[] = "text, more text, and even more text!";
 
+int timeoutcount=0;
+
+
 /* Interrupt Service Routine */
-void user_isr( void )
-{
-  return;
+void user_isr( void ) {
+    if (IFS(0) & 0x0100) {
+        uint8_t btn = getbtns(btn);
+        if(timeoutcount==5){
+            movement();
+            movement_remove();
+        }
+        if (timeoutcount==10){
+            //ändra ormen;
+            movement();
+            movement_remove();
+            pixel_update(btn);
+            btn = 0;  //Reset btn to fetch new value for next move
+            
+            timeoutcount=0;
+            }
+        IFS(0)&= ~(1 << 8);
+        TMR2 = 0;//Set T2IF to 0 - Clear T2 Int. flag.
+        timeoutcount++;
+    }
+
+    if(IFS(0) & 0x0800){
+        IFS(0)&= ~(1 << 11);
+    }
+    return;
 }
+
 
 /* Lab-specific initialization goes here */
 void labinit( void )
 {
-  return;
+    push('r');
+    push('r');
+    push('r');
+    push('r');
+    push('r');
+    push('r');
+    volatile unsigned int* TRISE_p = (volatile unsigned int*)0xBF886100;
+    TRISDSET = 0xFFF;
+    *TRISE_p &= ~0xF;
+
+    T2CON = 0; // Clear Timer2 control register
+    T2CONSET = 0x70 ; // Set prescaler to 1:256 (bits 6-4)
+    PR2 = 31250;
+    TMR2 = 0;
+  
+    IFS(0) =0;
+    IEC(0) = 0x0100; //Timer 2 interrupt enable T2IE
+    IPC(2) |= 0x1F; //T2IP
+    IPC(2) |= 0x1C0;
+
+    enable_interrupt();
+
+
+    T2CONSET = 0x8000; // Enable Timer2
+
+    return;
 }
 
+
 /* This function is called repetitively from the main program */
-void labwork( void )
-{
-  delay( 1000 );
-  time2string( textstring, mytime );
-  display_string( 3, textstring );
-  display_update();
-  tick( &mytime );
-  display_image(96, icon);
+
+void labwork( void ) {
+    display_bit_update();
 }
+

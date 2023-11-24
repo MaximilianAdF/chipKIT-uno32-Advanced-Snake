@@ -5,7 +5,7 @@
    For copyright and licensing, see file COPYING */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include <pic32mx.h>  /* Declarations of system-specific addresses etc */
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 
 /* Declare a helper function which is local to this file */
@@ -158,6 +158,34 @@ void display_image(int x, const uint8_t *data) {
 		for(j = 0; j < 32; j++)
 			spi_send_recv(~data[i*32 + j]);
 	}
+}
+
+
+void display_bit_update(void){
+  int i, j, k;
+
+	for(i = 0; i < 4; i++) {
+		DISPLAY_CHANGE_TO_COMMAND_MODE; //går in i comand mode
+		spi_send_recv(0x22);//välja start position
+		spi_send_recv(i);//start positionen?
+		
+		spi_send_recv(0x0);
+		spi_send_recv(0x10);
+		
+		DISPLAY_CHANGE_TO_DATA_MODE;
+    for(j = 0; j < 128; j++) {
+		int sum=0;
+    int expo=1;
+    for (k = 0;k < 8;k++){
+
+      sum += (bitmap[i*1024 +k*128+j]) * expo;
+      expo = expo*2;
+      };
+			spi_send_recv(sum);
+		}
+
+  }
+
 }
 
 void display_update(void) {
