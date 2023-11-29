@@ -160,7 +160,6 @@ void display_image(int x, const uint8_t *data) {
 	}
 }
 
-
 void display_bit_update(void){
   int i, j, k;
 
@@ -177,8 +176,9 @@ void display_bit_update(void){
 		int sum=0;
     int expo=1;
     for (k = 0;k < 8;k++){
-
-      sum += (bitmap[i*1024 +k*128+j]) * expo;
+      if(bitmap[i*1024 +k*128+j]!=0){
+        sum += expo;
+      }
       expo = expo*2;
       };
 			spi_send_recv(sum);
