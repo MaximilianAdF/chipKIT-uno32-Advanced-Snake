@@ -40,6 +40,11 @@ förflytnings cykel:
 #define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
 #define opponent 0      // 1 = Opponent on, 0 = Opponent off
 
+
+int end = 128*15;
+int head = 128*15+6;
+char temp_v = 'r';
+char vektor = 'r';
 /*
 1.kolla input
 2.ändra konstanten som adderas
@@ -53,15 +58,18 @@ förflytnings cykel:
 */
 void generate_walls(){
     if (wallInfinite == 0) {
-        for (int i = 1; i < 127; i++) {
+        int i;
+        for ( i = 1; i < 127; i++) {
             bitmap[i+128] = 2;
             bitmap[i+128*30] = 2;
         }
-        for (int j = 1; j < 31; j++) {
+        int j;
+        for ( j = 1; j < 31; j++) {
             bitmap[j*128 + 1] = 2;
             bitmap[j*128+126] = 2;
         }
     }
+
 }
 
 /*
@@ -143,10 +151,7 @@ int pop() {
     return poppedElem;
 }
 
-int end = 128*15;
-int head = 128*15+6;
-char temp_v = 'r';
-char vektor = 'r';
+
 
 
 
