@@ -34,13 +34,101 @@ förflytnings cykel:
 #include "mipslab.h"  /* Declatations for these labs */
 
 
-
+#define appleCount 1    // Define how many apples should be on the display at once
+#define snakeSpeed 1    // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define wallInfinite 0  // 1 = Infinite wall, 0 = Walls on
+#define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
+#define opponent 0      // 1 = Opponent on, 0 = Opponent off
 
 /*
 1.kolla input
 2.ändra konstanten som adderas
 
 */
+
+
+/*
+ Generate the outline of the snake game (the walls) 
+ incase infinite walls game mode has not been selected
+*/
+void generate_walls(){
+    if (wallInfinite == 0) {
+        for (int i = 1; i < 127; i++) {
+            bitmap[i+128] = 2;
+            bitmap[i+128*30] = 2;
+        }
+        for (int i = 1; i < 31; i++) {
+            bitmap[i*128 + 1] = 2;
+            bitmap[i*128+126] = 2;
+        }
+    }
+}
+
+/*
+ 1. Check if snake has hit itself ('1' in bitmap)
+ 2. Check if snake has hit wall ('2' in bitmap)
+ 3. Check if snake has hit obstacle ('3' in bitmap)
+ 4. Check if snake has hit apple ('4' in bitmap)
+*/
+void check_obstacle(){
+    if (vektor == 'r') {
+        if (bitmap[head+2] == 1 || bitmap[head+2] == 2 || bitmap[head+2] == 3) {
+            // Game over
+            return 1;
+        }
+        else if (bitmap[head+2] == 4) {
+            // Eat apple
+            return 0;
+        }
+    }
+    else if (vektor == 'l') {
+        if (bitmap[head-1] == 1 || bitmap[head-1] == 2 || bitmap[head-1] == 3) {
+            // Game over
+            return 1;
+        }
+        else if (bitmap[head-1] == 4) {
+            // Eat apple
+            return 0;
+        }
+    }
+    else if (vektor == 'u') {
+        if (bitmap[head-128] == 1 || bitmap[head-128] == 2 || bitmap[head-128] == 3) {
+            // Game over
+            return 1;
+        }
+        else if (bitmap[head-128] == 4) {
+            // Eat apple
+            return 0;
+        }
+    }
+    else if (vektor == 'd') {
+        if (bitmap[head+128*2] == 1 || bitmap[head+128*2] == 2 || bitmap[head+128*2] == 3) {
+            // Game over
+            return 1;
+        }
+        else if (bitmap[head+128*2] == 4) {
+            // Eat apple
+            return 0;
+        }
+    }
+    return;
+}
+
+
+/*
+ Apples are defined as '4' in the bitmap.
+  
+*/
+void generate_apples(){
+    while (appleCount > 0) {
+        int random = rand() % 4096;
+        if (bitmap[random] == 0 && ) {
+            bitmap[random] = 4;
+            appleCount--;
+        }
+    }
+}
+
 
 #define SIZE 1025
 int front = -1, rear = -1, inp_array[SIZE];

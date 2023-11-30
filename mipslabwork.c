@@ -14,31 +14,43 @@
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 #include "snake.h"
-int prime = 1234567;
-
+int prime = 1234567;    
 int mytime = 0x5957;
-
 char textstring[] = "text, more text, and even more text!";
 
-int timeoutcount=0;
+
+#define timeoutcount=0;
+
+
+void next_update(char dead) {
+    if (dead == 1) {          // Snake has collided, dead
+
+    }
+    else if (dead == 0) {     // Apple has been eaten
+        movement();
+    } else {                  // Nothing has changed
+        movement();
+        movement_remove();
+    }
+}
 
 
 /* Interrupt Service Routine */
 void user_isr( void ) {
     if (IFS(0) & 0x0100) {
         uint8_t btn = getbtns(btn);
+        char dead = check_obstacle(); // Check if snake has collided with something
+
         if(timeoutcount==5){
-            movement();
-            movement_remove();
+            next_update(dead);
         }
+        
         if (timeoutcount==10){
-            //ändra ormen;
-            movement();
-            movement_remove();
+            next_update(dead);
             pixel_update(btn);
-            btn = 0;  //Reset btn to fetch new value for next move
             
-            timeoutcount=0;
+            btn = 0;  //Reset btn to fetch new value for next move
+            timeoutcount=0; 
             }
         IFS(0)&= ~(1 << 8);
         TMR2 = 0;//Set T2IF to 0 - Clear T2 Int. flag.
