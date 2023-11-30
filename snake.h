@@ -57,9 +57,9 @@ void generate_walls(){
             bitmap[i+128] = 2;
             bitmap[i+128*30] = 2;
         }
-        for (int i = 1; i < 31; i++) {
-            bitmap[i*128 + 1] = 2;
-            bitmap[i*128+126] = 2;
+        for (int j = 1; j < 31; j++) {
+            bitmap[j*128 + 1] = 2;
+            bitmap[j*128+126] = 2;
         }
     }
 }
@@ -67,10 +67,10 @@ void generate_walls(){
 /*
  1. Check if snake has hit itself ('1' in bitmap)
  2. Check if snake has hit wall ('2' in bitmap)
- 3. Check if snake has hit obstacle ('3' in bitmap)
+ 3. Check if snake has it obstacle ('3' in bitmap)
  4. Check if snake has hit apple ('4' in bitmap)
 */
-void check_obstacle(){
+int check_obstacle(){
     if (vektor == 'r') {
         if (bitmap[head+2] == 1 || bitmap[head+2] == 2 || bitmap[head+2] == 3) {
             // Game over
@@ -119,15 +119,7 @@ void check_obstacle(){
  Apples are defined as '4' in the bitmap.
   
 */
-void generate_apples(){
-    while (appleCount > 0) {
-        int random = rand() % 4096;
-        if (bitmap[random] == 0 && ) {
-            bitmap[random] = 4;
-            appleCount--;
-        }
-    }
-}
+
 
 
 #define SIZE 1025

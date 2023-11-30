@@ -19,7 +19,7 @@ int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
 
-#define timeoutcount=0;
+int timeoutcount=0;
 
 
 void next_update(char dead) {
@@ -50,7 +50,7 @@ void user_isr( void ) {
             pixel_update(btn);
             
             btn = 0;  //Reset btn to fetch new value for next move
-            timeoutcount=0; 
+            timeoutcount=0;
             }
         IFS(0)&= ~(1 << 8);
         TMR2 = 0;//Set T2IF to 0 - Clear T2 Int. flag.
