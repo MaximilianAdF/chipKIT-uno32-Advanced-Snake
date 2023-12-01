@@ -96,42 +96,44 @@ void generate_walls(){
  4. Check if snake has hit apple ('4' in bitmap)
 */
 int check_obstacle(){
+    int headX = head%128;
+    int headY = head/128;
     if (vektor == 'r') {
-        if (bitmap[head+2] == 1 || bitmap[head+2] == 2 || bitmap[head+2] == 3) {
+        if (bitmap[headY*128 + (headX+2)%128] == 1 || bitmap[headY*128 + (headX+2)%128] == 2 || bitmap[headY*128 + (headX+2)%128] == 3) {
             // Game over
             return 1;
         }
-        else if (bitmap[head+2] == 4) {
+        else if (bitmap[headY*128 + (headX+2)%128] == 4) {
             // Eat apple
             return 4;
         }
     }
     else if (vektor == 'l') {
-        if (bitmap[head-1] == 1 || bitmap[head-1] == 2 || bitmap[head-1] == 3) {
+        if (bitmap[headY*128 + (headX+128-1)%128] == 1 || bitmap[headY*128 + (headX+128-1)%128] == 2 || bitmap[headY*128 + (headX+128-1)%128] == 3) {
             // Game over
             return 1;
         }
-        else if (bitmap[head-1] == 4) {
+        else if (bitmap[headY*128 + (headX+128-1)%128] == 4) {
             // Eat apple
             return 4;
         }
     }
     else if (vektor == 'u') {
-        if (bitmap[head-128] == 1 || bitmap[head-128] == 2 || bitmap[head-128] == 3) {
+        if (bitmap[((headY+32-1)%32)*128 + headX] == 1 || bitmap[((headY+32-1)%32)*128 + headX] == 2 || bitmap[((headY+32-1)%32)*128 + headX] == 3) {
             // Game over
             return 1;
         }
-        else if (bitmap[head-128] == 4) {
+        else if (bitmap[((headY+32-1)%32)*128 + headX] == 4) {
             // Eat apple
             return 4;
         }
     }
     else if (vektor == 'd') {
-        if (bitmap[head+128*2] == 1 || bitmap[head+128*2] == 2 || bitmap[head+128*2] == 3) {
+        if (bitmap[((headY+2)%32)*128 + headX] == 1 || bitmap[((headY+2)%32)*128 + headX] == 2 || bitmap[((headY+2)%32)*128 + headX] == 3) {
             // Game over
             return 1;
         }
-        else if (bitmap[head+128*2] == 4) {
+        else if (bitmap[((headY+2)%32)*128 + headX] == 4) {
             // Eat apple
             return 4;
         }
@@ -174,24 +176,24 @@ void movement_remove() {
     int stored_v = pop();
 
     if(stored_v == 'l'){
-        bitmap[end+1]=0;
-        bitmap[end+1+128]=0;
-        end=end -1;
+        bitmap[endY*128 + (endX+128-1)%128]=0;
+        bitmap[endY*128 + (endX+128-1)%128+128]=0;
+        end=endY*128 + (endX+128-1)%128;
     }
     else if(stored_v == 'r'){ //Update to go throigh wall
-        bitmap[end]=0;
-        bitmap[end+128]=0; 
-        end=end +1;
+        bitmap[endY*128 + (endX+2)%128]=0;
+        bitmap[endY*128 + (endX+2)%128+128]=0; 
+        end=endY*128 + (endX+1)%128;
     }
     else if(stored_v == 'd'){
-        bitmap[end]=0;
-        bitmap[end+1]=0;
-        end=end +128;
+        bitmap[((endY+2)%32)*128 + endX]=0;
+        bitmap[((endY+2)%32) *128 + endX+1]=0;
+        end=((endY+1)%32)*128 + endX;
     }
     else if(stored_v == 'u'){
-        bitmap[end+128]=0;
-        bitmap[end+1+128]=0;
-        end=end -128;
+        bitmap[((endX+32-1)%32)*128 + endX]=0;
+        bitmap[((endY+32-1)%32)*128 + endX+1]=0;
+        end=((endY+32-1)%32)*128 + endX;
     }
 }
 
