@@ -59,14 +59,14 @@ char vektor = 'r';  // r = right, l = left, u = up, d = down
 */
 void create_apple() { // Half apples can be eaten, fix?????????
     while (appleCC > 0){
-        int appleX = (TMR2copy % (62)+1)*2;
-        int appleY = (TMR2copy % (14)+1)*2;
+        int appleX = ((TMR2copy % 125) + 3) & ~1;  // Ensures appleX is >= 3, even, and < 127
+        int appleY = ((TMR2copy % 29) + 3) & ~1;   // Ensures appleY is >= 3, even, and < 31
         
         if (bitmap[appleX+appleY*128] == 0) {
             bitmap[appleX+appleY*128] = 4; 
-            bitmap[appleX+appleY*128+1] = 5;
+            bitmap[appleX+appleY*128-1] = 5;
             bitmap[appleX+appleY*128+128] = 5;
-            bitmap[appleX+appleY*128+1+128] = 5;
+            bitmap[appleX+appleY*128-1+128] = 5;
         }
         appleCC--;
     }
