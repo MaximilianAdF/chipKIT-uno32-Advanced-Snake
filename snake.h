@@ -57,7 +57,7 @@ char vektor = 'r';  // r = right, l = left, u = up, d = down
  Generate the outline of the snake game (the walls) 
  incase infinite walls game mode has not been selected
 */
-void create_apple() { // Half apples can be eaten, fix?????????
+void create_apple() {
     while (appleCC > 0){
         int appleX = ((TMR2copy % 125) + 3) & ~1;  // Ensures appleX is >= 3, even, and < 127
         int appleY = ((TMR2copy % 29) + 3) & ~1;   // Ensures appleY is >= 3, even, and < 31
@@ -181,7 +181,7 @@ void movement_remove() {
     else if(stored_v == 'r'){ //Update to go throigh wall
         bitmap[end]=0;
         bitmap[end+128]=0; 
-        end=endY + (endX+1)%128;
+        end=end +1;
     }
     else if(stored_v == 'd'){
         bitmap[end]=0;
