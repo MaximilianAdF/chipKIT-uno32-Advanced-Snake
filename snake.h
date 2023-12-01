@@ -176,23 +176,23 @@ void movement_remove() {
     int stored_v = pop();
 
     if(stored_v == 'l'){
-        bitmap[endY*128 + (endX+128-1)%128]=0;
-        bitmap[endY*128 + (endX+128-1)%128+128]=0;
-        end=endY*128 + (endX+128-1)%128;
+        bitmap[endY*128 + endX+1]=0;
+        bitmap[endY*128 + 128 + endX+1]=0;
+        end=endY*128 + (endX-1)%128;
     }
     else if(stored_v == 'r'){ //Update to go throigh wall
-        bitmap[endY*128 + (endX+2)%128]=0;
-        bitmap[endY*128 + (endX+2)%128+128]=0; 
+        bitmap[endY*128 + endX]=0;
+        bitmap[endY*128 + endX+128]=0; 
         end=endY*128 + (endX+1)%128;
     }
     else if(stored_v == 'd'){
-        bitmap[((endY+2)%32)*128 + endX]=0;
-        bitmap[((endY+2)%32) *128 + endX+1]=0;
+        bitmap[((endY)%32)*128 + endX]=0;
+        bitmap[((endY)%32)*128 + endX+1]=0;
         end=((endY+1)%32)*128 + endX;
     }
     else if(stored_v == 'u'){
-        bitmap[((endX+32-1)%32)*128 + endX]=0;
-        bitmap[((endY+32-1)%32)*128 + endX+1]=0;
+        bitmap[((endY+1)%32)*128 + endX]=0;
+        bitmap[((endY+1)%32)*128 + endX+1]=0;
         end=((endY+32-1)%32)*128 + endX;
     }
 }
@@ -230,13 +230,13 @@ int movement(button){
     int headX = head%128;
     int headY = head/128;
     if(vektor == 'l'&& next_step!=1){
-        bitmap[headY*128 + (headX+128-1)%128]=1;
-        bitmap[headY*128 + (headX+128-1)%128+128]=1;
-        head=headY*128 + (headX+128-1)%128;
+        bitmap[headY*128 + (headX-1)%128]=1;
+        bitmap[headY*128 + (headX-1)%128 + 128]=1;
+        head=headY*128 + (headX-1)%128;
     }
     else if(vektor == 'r'&& next_step!=1){
         bitmap[headY*128 + (headX+2)%128]=1;
-        bitmap[headY*128 + (headX+2)%128+128]=1;
+        bitmap[headY*128 + (headX+2)%128 + 128]=1;
         head=headY*128 + (headX+1)%128;
     }
     else if(vektor == 'd'&& next_step!=1){
