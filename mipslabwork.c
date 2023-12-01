@@ -14,42 +14,28 @@
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 #include "snake.h"
+#include <stdlib.h>
+
 int prime = 1234567;    
 int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
 
 int timeoutcount=0;
-
-
-void next_update(char dead) {
-    if (dead == 1) {          // Snake has collided, dead
-
-    }
-    else if (dead == 0) {     // Apple has been eaten
-        movement();
-    } else {                  // Nothing has changed
-        movement();
-        movement_remove();
-    }
-}
-
-
+uint8_t btn;
+int dead=0;
 /* Interrupt Service Routine */
 void user_isr( void ) {
-    if (IFS(0) & 0x0100) {
-        uint8_t btn = getbtns(btn);
-        char dead = check_obstacle(); // Check if snake has collided with something
-
-        if(timeoutcount==5){
-            next_update(dead);
+    if (IFS(0) & 0x0100 && dead!=1) {
+        btn = getbtns();
+        if(timeoutcount==2){
+            btn = getbtns();
+            dead=movement(0);
         }
         
-        if (timeoutcount==10){
-            next_update(dead);
-            pixel_update(btn);
-            
-            btn = 0;  //Reset btn to fetch new value for next move
+        if (timeoutcount==4){
+            btn = getbtns();
+            dead=movement(btn);
             timeoutcount=0;
             }
         IFS(0)&= ~(1 << 8);
@@ -67,8 +53,7 @@ void user_isr( void ) {
 /* Lab-specific initialization goes here */
 void labinit( void )
 {
-    push('r');
-    push('r');
+    generate_walls();
     push('r');
     push('r');
     push('r');
@@ -78,8 +63,8 @@ void labinit( void )
     *TRISE_p &= ~0xF;
 
     T2CON = 0; // Clear Timer2 control register
-    T2CONSET = 0x70 ; // Set prescaler to 1:256 (bits 6-4)
-    PR2 = 31250;
+    T2CONSET = 0x70; // Set prescaler to 1:256 (bits 6-4)
+    PR2 = 15625;
     TMR2 = 0;
   
     IFS(0) =0;
@@ -99,6 +84,8 @@ void labinit( void )
 /* This function is called repetitively from the main program */
 
 void labwork( void ) {
+    TMR2copy = TMR2;
+    btn = getbtns();
     display_bit_update();
 }
 

@@ -2,18 +2,29 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+#include <stdlib.h>
 
 int getsw( void ){
     return (PORTD >> 8) & 0xF;
 
- }
+};
 
 
- int getbtns(int btn){
-   uint8_t btnVal = (PORTD >> 5) & 0x7;
-   if (btnVal & 0x1 || btnVal & 0x2 || btn == 0) {
-      return btnVal;
-   } else {
-      return btn;
+char getbtns(){
+   uint8_t btn1 = (PORTF >> 1) & 0x1;
+   uint8_t btn234 = (PORTD >> 5) & 0x7;
+   
+   if (btn1){
+      return 'r';
    }
+   if (btn234 & 0x1){
+      return 'd';
+   }
+   if (btn234 & 0x2){
+      return 'u';
+   }
+   if (btn234 & 0x4){
+      return 'l';
+   }
+   return;
 }

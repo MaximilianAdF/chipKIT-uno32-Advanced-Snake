@@ -32,23 +32,24 @@ förflytnings cykel:
 #include <stdio.h>
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+#include <stdlib.h>
 
 
-#define appleCount 1    // Define how many apples should be on the display at once
-#define snakeSpeed 1    // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
-#define wallInfinite 0  // 1 = Infinite wall, 0 = Walls on
+#define appleCount 2    // Define how many apples should be on the display at once
+#define snakeSpeed 1   // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define wallInfinite 1  // 1 = Infinite wall, 0 = Walls on
 #define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
 #define opponent 0      // 1 = Opponent on, 0 = Opponent off
 
-
-int end = 128*15;
-int head = 128*15+6;
+int TMR2copy = 0;
+int appleCC = appleCount;
+int end = 128*14+2;
+int head = 128*14+6;
 char temp_v = 'r';
-char vektor = 'r';
+char vektor = 'r';  // r = right, l = left, u = up, d = down
 /*
 1.kolla input
 2.ändra konstanten som adderas
-
 */
 
 
@@ -56,6 +57,22 @@ char vektor = 'r';
  Generate the outline of the snake game (the walls) 
  incase infinite walls game mode has not been selected
 */
+void create_apple() { // Half apples can be eaten, fix?????????
+    while (appleCC > 0){
+        int appleX = (TMR2copy % (62)+1)*2;
+        int appleY = (TMR2copy % (14)+1)*2;
+        
+        if (bitmap[appleX+appleY*128] == 0) {
+            bitmap[appleX+appleY*128] = 4; 
+            bitmap[appleX+appleY*128+1] = 5;
+            bitmap[appleX+appleY*128+128] = 5;
+            bitmap[appleX+appleY*128+1+128] = 5;
+        }
+        appleCC--;
+    }
+}
+
+
 void generate_walls(){
     if (wallInfinite == 0) {
         int i;
@@ -69,7 +86,6 @@ void generate_walls(){
             bitmap[j*128+126] = 2;
         }
     }
-
 }
 
 /*
@@ -86,7 +102,7 @@ int check_obstacle(){
         }
         else if (bitmap[head+2] == 4) {
             // Eat apple
-            return 0;
+            return 4;
         }
     }
     else if (vektor == 'l') {
@@ -96,7 +112,7 @@ int check_obstacle(){
         }
         else if (bitmap[head-1] == 4) {
             // Eat apple
-            return 0;
+            return 4;
         }
     }
     else if (vektor == 'u') {
@@ -106,7 +122,7 @@ int check_obstacle(){
         }
         else if (bitmap[head-128] == 4) {
             // Eat apple
-            return 0;
+            return 4;
         }
     }
     else if (vektor == 'd') {
@@ -116,10 +132,10 @@ int check_obstacle(){
         }
         else if (bitmap[head+128*2] == 4) {
             // Eat apple
-            return 0;
+            return 4;
         }
     }
-    return;
+    return 0;
 }
 
 
@@ -151,70 +167,6 @@ int pop() {
     return poppedElem;
 }
 
-
-
-
-
-void pixel_update(button){
-    if(button & 0x2){ // Left
-      if(vektor=='l'){
-         temp_v = 'd';
-      }
-      if(vektor=='d'){
-         temp_v = 'r';
-      }
-      if(vektor=='r'){
-         temp_v = 'u';
-      }
-      if(vektor=='u'){
-         temp_v = 'l';
-      }
-    }
-   else if(button & 0x1){ // Right
-      if(vektor=='l'){
-         temp_v = 'u';
-      }
-      if(vektor=='u'){
-         temp_v = 'r';
-      }
-      if(vektor=='r'){
-         temp_v = 'd';
-      }
-      if(vektor=='d'){
-         temp_v = 'l';
-      }
-    }
-
-    
-}
-
-
-void movement(){
-    vektor=temp_v;
-    push(vektor);
-    if(vektor == 'l'){
-        bitmap[head-1]=1;
-        bitmap[head-1+128]=1;
-        head=head -1;
-    }
-    else if(vektor == 'r'){
-        bitmap[head+2]=1;
-        bitmap[head+2+128]=1;
-        head=head +1;
-    }
-    else if(vektor == 'd'){
-        bitmap[head+128*2]=1;
-        bitmap[head+1+128*2]=1;
-        head=head +128;
-
-    }
-    else if(vektor == 'u'){
-        bitmap[head-128]=1;
-        bitmap[head+1-128]=1;
-        head=head -128;
-    }
-}
-
 void movement_remove() { 
     int stored_v = pop();
     if(stored_v == 'l'){
@@ -222,7 +174,7 @@ void movement_remove() {
         bitmap[end+1+128]=0;
         end=end -1;
     }
-    else if(stored_v == 'r'){
+    else if(stored_v == 'r'){ //Update to go throigh wall
         bitmap[end]=0;
         bitmap[end+128]=0;
         end=end +1;
@@ -238,6 +190,64 @@ void movement_remove() {
         end=end -128;
     }
 }
+
+int movement(button){
+    int next_step = check_obstacle();
+    if(button!=0){
+        if(button=='l' && vektor != 'r'){
+            vektor = button;
+        }
+        if(button=='r' && vektor != 'l'){
+            vektor = button;
+        }
+        if(button=='u' && vektor != 'd'){
+            vektor = button;
+        }
+        if(button=='d' && vektor != 'u'){
+            vektor = button;
+        }
+
+    }
+    if (next_step == 4) {
+        appleCC++;
+        create_apple();
+    }
+
+    if (next_step!=4 && next_step !=5){
+        movement_remove();
+    }
+    if (next_step==1){
+        return 1;
+    }
+
+    push(vektor);
+    int headX = head%128;
+    int headY = head/128;
+    if(vektor == 'l'&& next_step!=1){
+        bitmap[head-1]=1;
+        bitmap[head-1+128]=1;
+        head=head -1;
+    }
+    else if(vektor == 'r'&& next_step!=1){
+        bitmap[headY + (headX+2)%128]=1;S
+        bitmap[headY + (headX+2)%128+128]=1;
+        head=headY + (headX+1)%128;
+    }
+    else if(vektor == 'd'&& next_step!=1){
+        bitmap[head+128*2]=1;
+        bitmap[head+1+128*2]=1;
+        head=head +128;
+
+    }
+    else if(vektor == 'u'&& next_step!=1){
+        bitmap[head-128]=1;
+        bitmap[head+1-128]=1;
+        head=head -128;
+    }
+    return 0;
+}
+
+
 
 
 
