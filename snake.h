@@ -35,7 +35,7 @@ förflytnings cykel:
 #include <stdlib.h>
 
 
-#define appleCount 2    // Define how many apples should be on the display at once
+#define appleCount 0    // Define how many apples should be on the display at once
 #define snakeSpeed 1   // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 #define wallInfinite 1  // 1 = Infinite wall, 0 = Walls on
 #define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
@@ -86,6 +86,7 @@ void generate_walls(){
             bitmap[j*128+126] = 2;
         }
     }
+    return;
 }
 
 /*
@@ -168,7 +169,10 @@ int pop() {
 }
 
 void movement_remove() { 
+    int endX = end%128;
+    int endY = end/128;
     int stored_v = pop();
+
     if(stored_v == 'l'){
         bitmap[end+1]=0;
         bitmap[end+1+128]=0;
@@ -176,8 +180,8 @@ void movement_remove() {
     }
     else if(stored_v == 'r'){ //Update to go throigh wall
         bitmap[end]=0;
-        bitmap[end+128]=0;
-        end=end +1;
+        bitmap[end+128]=0; 
+        end=endY + (endX+1)%128;
     }
     else if(stored_v == 'd'){
         bitmap[end]=0;
@@ -224,9 +228,9 @@ int movement(button){
     int headX = head%128;
     int headY = head/128;
     if(vektor == 'l'&& next_step!=1){
-        bitmap[head-1]=1;
-        bitmap[head-1+128]=1;
-        head=head -1;
+        bitmap[headY + (headX+128-1)%128]=1;
+        bitmap[headY + (headX+128-1)%128+128]=1;
+        head=headY + (headX+128-1)%128;
     }
     else if(vektor == 'r'&& next_step!=1){
         bitmap[headY + (headX+2)%128]=1;S
@@ -234,15 +238,15 @@ int movement(button){
         head=headY + (headX+1)%128;
     }
     else if(vektor == 'd'&& next_step!=1){
-        bitmap[head+128*2]=1;
-        bitmap[head+1+128*2]=1;
-        head=head +128;
+        bitmap[(headY+128*2)%(32*128) + headX]=1;
+        bitmap[(headY+128*2)%(32*128)+1 + headX]=1;
+        head=(headY+128)%(32*128) + headX;
 
     }
     else if(vektor == 'u'&& next_step!=1){
-        bitmap[head-128]=1;
-        bitmap[head+1-128]=1;
-        head=head -128;
+        bitmap[(headY+(32*128)-128)%(32*128) + headX]=1;
+        bitmap[(headY+(32*128)-128)%(32*128)+1 + headX]=1;
+        head=(headY+(32*128)-128)%(32*128) + headX;
     }
     return 0;
 }
