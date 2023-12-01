@@ -35,7 +35,7 @@ förflytnings cykel:
 #include <stdlib.h>
 
 
-#define appleCount 0    // Define how many apples should be on the display at once
+#define appleCount 1    // Define how many apples should be on the display at once
 #define snakeSpeed 1   // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 #define wallInfinite 1  // 1 = Infinite wall, 0 = Walls on
 #define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
@@ -64,9 +64,9 @@ void create_apple() {
         
         if (bitmap[appleX+appleY*128] == 0) {
             bitmap[appleX+appleY*128] = 4; 
-            bitmap[appleX+appleY*128-1] = 5;
+            bitmap[appleX+appleY*128+1] = 5;
             bitmap[appleX+appleY*128+128] = 5;
-            bitmap[appleX+appleY*128-1+128] = 5;
+            bitmap[appleX+appleY*128+1+128] = 5;
         }
         appleCC--;
     }
