@@ -228,25 +228,25 @@ int movement(button){
     int headX = head%128;
     int headY = head/128;
     if(vektor == 'l'&& next_step!=1){
-        bitmap[headY + (headX+128-1)%128]=1;
-        bitmap[headY + (headX+128-1)%128+128]=1;
-        head=headY + (headX+128-1)%128;
+        bitmap[headY*128 + (headX+128-1)%128]=1;
+        bitmap[headY*128 + (headX+128-1)%128+128]=1;
+        head=headY*128 + (headX+128-1)%128;
     }
     else if(vektor == 'r'&& next_step!=1){
-        bitmap[headY + (headX+2)%128]=1;S
-        bitmap[headY + (headX+2)%128+128]=1;
-        head=headY + (headX+1)%128;
+        bitmap[headY*128 + (headX+2)%128]=1;
+        bitmap[headY*128 + (headX+2)%128+128]=1;
+        head=headY*128 + (headX+1)%128;
     }
     else if(vektor == 'd'&& next_step!=1){
-        bitmap[(headY+128*2)%(32*128) + headX]=1;
-        bitmap[(headY+128*2)%(32*128)+1 + headX]=1;
-        head=(headY+128)%(32*128) + headX;
+        bitmap[((headY+2)%32)*128 + headX]=1;
+        bitmap[((headY+2)%32) *128 + headX+1]=1;
+        head=((headY+1)%32)*128 + headX;
 
     }
     else if(vektor == 'u'&& next_step!=1){
-        bitmap[(headY+(32*128)-128)%(32*128) + headX]=1;
-        bitmap[(headY+(32*128)-128)%(32*128)+1 + headX]=1;
-        head=(headY+(32*128)-128)%(32*128) + headX;
+        bitmap[((headY+32-1)%32)*128 + headX]=1;
+        bitmap[((headY+32-1)%32)*128 + headX+1]=1;
+        head=((headY+32-1)%32)*128 + headX;
     }
     return 0;
 }
