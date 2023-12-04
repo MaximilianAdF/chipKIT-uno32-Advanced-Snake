@@ -59,8 +59,8 @@ char vektor = 'r';  // r = right, l = left, u = up, d = down
 */
 void create_apple() {
     while (appleCC > 0){
-        int appleX = ((TMR2copy % 125) + 3) & ~1;  // Ensures appleX is >= 3, even, and < 127
-        int appleY = ((TMR2copy % 29) + 3) & ~1;   // Ensures appleY is >= 3, even, and < 31
+        int appleX = ((TMR2copy % 61) + 1)*2 + 1;  // Ensures appleX is >= 3, odd, and < 127
+        int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
         
         if (bitmap[appleX+appleY*128] == 0) {
             bitmap[appleX+appleY*128] = 4; 
