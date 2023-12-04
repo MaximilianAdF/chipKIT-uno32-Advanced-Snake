@@ -35,13 +35,15 @@ förflytnings cykel:
 #include <stdlib.h>
 
 
-#define appleCount 1    // Define how many apples should be on the display at once
-#define snakeSpeed 5   // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
-#define wallInfinite 1  // 1 = Infinite wall, 0 = Walls on
-#define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
-#define opponent 0      // 1 = Opponent on, 0 = Opponent off
+#define SIZE 2048
+#define appleCount 3     // Define how many apples should be on the display at once
+#define snakeSpeed 5     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define wallInfinite 1   // 1 = Infinite wall, 0 = Walls on
+#define opponent 0       // 1 = Opponent on, 0 = Opponent off
 
+int front = -1, rear = -1, inp_array[SIZE];
 int TMR2copy = 0;
+int currScore = 0;
 int appleCC = appleCount;
 int end = 128*14+2;
 int head = 128*14+6;
@@ -57,21 +59,24 @@ char vektor = 'r';  // r = right, l = left, u = up, d = down
  Generate the outline of the snake game (the walls) 
  incase infinite walls game mode has not been selected
 */
-void create_apple() {
-    while (appleCC > 0){
-        int appleX = ((TMR2copy % 61) + 1)*2 + 1;  // Ensures appleX is >= 3, odd, and < 127
-        int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
-        
-        if (bitmap[appleX+appleY*128] == 0) {
-            bitmap[appleX+appleY*128] = 4; 
-            bitmap[appleX+appleY*128+1] = 5;
-            bitmap[appleX+appleY*128+128] = 5;
-            bitmap[appleX+appleY*128+1+128] = 5;
-        }
+
+
+
+int create_apple(int TMR2copy) {
+    int appleX = ((TMR2copy % 61) + 1)*2 + 1;  // Ensures appleX is >= 3, odd, and < 127
+    int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
+
+    if (bitmap[appleX+appleY*128] != 0) {
+        return 0;
+    } else {
+        bitmap[appleX+appleY*128] = 4; 
+        bitmap[appleX+appleY*128+1] = 5;
+        bitmap[appleX+appleY*128+128] = 5;
+        bitmap[appleX+appleY*128+1+128] = 5;
         appleCC--;
+        return 1;
     }
 }
-
 
 void generate_walls(){
     if (wallInfinite == 0) {
@@ -141,27 +146,29 @@ int check_obstacle(){
     return 0;
 }
 
-
-#define SIZE 1025
-int front = -1, rear = -1, inp_array[SIZE];
-
 void push(int x) {
-    if (front == -1){
+    if (front == -1) {
         front = 0;
     }
-    rear = rear + 1;
+    rear = (rear + 1) % SIZE; // Circular increment to prevent array overflow
     inp_array[rear] = x;
 }
 
 int pop() {
+    if (front == -1) {
+        // Queue is empty, handle the situation accordingly
+        return -1; // Assuming -1 is an invalid value; you can choose a different approach
+    }
+
     int poppedElem = inp_array[front];
-    if (front == rear) { 
+    if (front == rear) {
         front = rear = -1;
     } else {
-        front = front + 1;
+        front = (front + 1) % SIZE; // Circular increment to prevent array overflow
     }
     return poppedElem;
 }
+
 
 void movement_remove() { 
     int endX = end%128;
@@ -191,7 +198,7 @@ void movement_remove() {
 }
 
 int movement(uint8_t button){
-    int next_step = check_obstacle();
+
     if(button=='l' && vektor != 'r'){
         vektor = button;
     }
@@ -204,13 +211,19 @@ int movement(uint8_t button){
     if(button=='d' && vektor != 'u'){
         vektor = button;
     }
-
+    
+    int next_step = check_obstacle();
+    
     if (next_step == 4) {
+        currScore++;
         appleCC++;
-        create_apple();
-    } else if (next_step!=4 && next_step !=5){
+    }
+
+    if (next_step!=4 && next_step !=5){
         movement_remove();
-    } else if (next_step==1){
+    }
+    
+    if (next_step==1){
         return 1;
     }
 

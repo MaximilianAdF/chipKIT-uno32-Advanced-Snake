@@ -62,13 +62,13 @@ int main(void) {
 	display_string(2, "Engineering");
 	display_string(3, "Welcome!");
 	display_update();
-	
 	display_image(96, icon);*/
 	
+	//menu();
 	
 
 	labinit(); /* Do any lab-specific initialization */
-
+	game_init();
 	while( 1 )
 	{
 	  labwork(); /* Do lab-specific things again and again */

@@ -15,7 +15,6 @@ void display_update(void);
 uint8_t spi_send_recv(uint8_t data);
 
 /* Declare lab-related functions from mipslabfunc.c */
-void create_apple(void);
 char * itoaconv( int num );
 void labwork(void);
 int nextprime( int inval );
