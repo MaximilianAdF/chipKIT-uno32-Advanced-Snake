@@ -30,7 +30,7 @@ förflytnings cykel:
 */
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <stdio.h>
-#include "\msys64\opt\mcb32tools\include\pic32mx.h"  /* Declarations of system-specific addresses etc */
+#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
 #include "mipslab.h"  /* Declatations for these labs */
 #include <stdlib.h>
 
@@ -176,15 +176,15 @@ void movement_remove() {
     int stored_v = pop();
 
     if(stored_v == 'l'){
-        bitmap[endY*128 + endX+1]=0;
-        bitmap[endY*128 + 128 + endX+1]=0;
-        end=endY*128 + (endX-1)%128;
+        bitmap[endY*128 + (endX+1)%128]=0;
+        bitmap[endY*128 + (endX+1)%128 + 128]=0;
+        end=endY*128 + (128+endX-1)%128;
     }
-    else if(stored_v == 'r'){ //Update to go throigh wall
+    else if(stored_v == 'r'){
         bitmap[endY*128 + endX]=0;
         bitmap[endY*128 + endX+128]=0; 
         end=endY*128 + (endX+1)%128;
-    }
+    }   
     else if(stored_v == 'd'){
         bitmap[((endY)%32)*128 + endX]=0;
         bitmap[((endY)%32)*128 + endX+1]=0;
@@ -197,7 +197,7 @@ void movement_remove() {
     }
 }
 
-int movement(button){
+int movement(uint8_t button){
     int next_step = check_obstacle();
     if(button!=0){
         if(button=='l' && vektor != 'r'){
@@ -229,23 +229,23 @@ int movement(button){
     push(vektor);
     int headX = head%128;
     int headY = head/128;
-    if(vektor == 'l'&& next_step!=1){
-        bitmap[headY*128 + (headX-1)%128]=1;
-        bitmap[headY*128 + (headX-1)%128 + 128]=1;
-        head=headY*128 + (headX-1)%128;
+    if (vektor == 'l'){
+        bitmap[headY*128 + (128+headX-1)%128]=1;
+        bitmap[headY*128 + (128+headX-1)%128 + 128]=1;
+        head=headY*128 + (128+headX-1)%128;
     }
-    else if(vektor == 'r'&& next_step!=1){
+    else if(vektor == 'r'){
         bitmap[headY*128 + (headX+2)%128]=1;
         bitmap[headY*128 + (headX+2)%128 + 128]=1;
         head=headY*128 + (headX+1)%128;
     }
-    else if(vektor == 'd'&& next_step!=1){
+    else if(vektor == 'd'){
         bitmap[((headY+2)%32)*128 + headX]=1;
-        bitmap[((headY+2)%32) *128 + headX+1]=1;
+        bitmap[((headY+2)%32)*128 + headX+1]=1;
         head=((headY+1)%32)*128 + headX;
 
     }
-    else if(vektor == 'u'&& next_step!=1){
+    else if(vektor == 'u'){
         bitmap[((headY+32-1)%32)*128 + headX]=1;
         bitmap[((headY+32-1)%32)*128 + headX+1]=1;
         head=((headY+32-1)%32)*128 + headX;
