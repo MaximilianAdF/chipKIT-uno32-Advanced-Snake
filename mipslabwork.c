@@ -27,11 +27,11 @@ int dead=1;
 /* Interrupt Service Routine */
 void user_isr( void ) {
     if (IFS(0) & 0x0100 && dead!=1) { 
-        if(timeoutcount==(8-snakeSpeed)){
+        if(timeoutcount==(7-snakeSpeed)){
             dead=movement(0);
         }
         
-        if (timeoutcount==(8-snakeSpeed)*2){
+        if (timeoutcount==(7-snakeSpeed)*2){
             dead=movement(btn);
             timeoutcount=0;
             }

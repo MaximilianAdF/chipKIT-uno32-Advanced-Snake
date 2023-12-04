@@ -37,7 +37,7 @@ förflytnings cykel:
 
 #define SIZE 2048
 #define appleCount 3     // Define how many apples should be on the display at once
-#define snakeSpeed 5     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define snakeSpeed 4     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 #define wallInfinite 1   // 1 = Infinite wall, 0 = Walls on
 #define opponent 0       // 1 = Opponent on, 0 = Opponent off
 

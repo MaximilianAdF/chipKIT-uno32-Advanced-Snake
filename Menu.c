@@ -9,13 +9,14 @@ char curr_line_2[]="  mode";
 char curr_line_3[]="  highscore";
 void swap(input){
     if(current_menu==0){
-        if (input=='d'){
-            if(current==1){
-                
-            }
-            
-        }
+        char curr_line_1="  start";
+        char curr_line_2="  mode";
+        char curr_line_3="  highscore";
     }
+    if(input=='d'){
+        current;
+    }
+
     if (input=='d'){
         if(current ==1){
             curr_line_1[0]=' ';
