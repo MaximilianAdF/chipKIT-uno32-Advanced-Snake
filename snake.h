@@ -36,7 +36,7 @@ förflytnings cykel:
 
 
 #define appleCount 1    // Define how many apples should be on the display at once
-#define snakeSpeed 1   // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define snakeSpeed 5   // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 #define wallInfinite 1  // 1 = Infinite wall, 0 = Walls on
 #define obstacles 0     // 1 = Obstacles on, 0 = Obstacles off
 #define opponent 0      // 1 = Opponent on, 0 = Opponent off
@@ -142,13 +142,6 @@ int check_obstacle(){
 }
 
 
-/*
- Apples are defined as '4' in the bitmap.
-  
-*/
-
-
-
 #define SIZE 1025
 int front = -1, rear = -1, inp_array[SIZE];
 
@@ -199,30 +192,25 @@ void movement_remove() {
 
 int movement(uint8_t button){
     int next_step = check_obstacle();
-    if(button!=0){
-        if(button=='l' && vektor != 'r'){
-            vektor = button;
-        }
-        if(button=='r' && vektor != 'l'){
-            vektor = button;
-        }
-        if(button=='u' && vektor != 'd'){
-            vektor = button;
-        }
-        if(button=='d' && vektor != 'u'){
-            vektor = button;
-        }
-
+    if(button=='l' && vektor != 'r'){
+        vektor = button;
     }
+    if(button=='r' && vektor != 'l'){
+        vektor = button;
+    }
+    if(button=='u' && vektor != 'd'){
+        vektor = button;
+    }
+    if(button=='d' && vektor != 'u'){
+        vektor = button;
+    }
+
     if (next_step == 4) {
         appleCC++;
         create_apple();
-    }
-
-    if (next_step!=4 && next_step !=5){
+    } else if (next_step!=4 && next_step !=5){
         movement_remove();
-    }
-    if (next_step==1){
+    } else if (next_step==1){
         return 1;
     }
 

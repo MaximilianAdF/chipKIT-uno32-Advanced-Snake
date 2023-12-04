@@ -58,6 +58,6 @@ extern char bitmap[4096];
 void delay(int);
 void time2string( char *, int );
 /* Written as part of i/o lab: getbtns, getsw, enable_interrupt */
-char getbtns(void);
+char getbtns(char);
 int getsw(void);
 void enable_interrupt(void);

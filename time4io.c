@@ -10,7 +10,7 @@ int getsw( void ){
 };
 
 
-char getbtns(){
+char getbtns(char btn){
    uint8_t btn1 = (PORTF >> 1) & 0x1;
    uint8_t btn234 = (PORTD >> 5) & 0x7;
    
@@ -26,5 +26,5 @@ char getbtns(){
    if (btn234 & 0x4){
       return 'l';
    }
-   return;
+   return btn;
 }

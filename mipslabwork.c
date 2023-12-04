@@ -22,19 +22,16 @@ char textstring[] = "text, more text, and even more text!";
 
 
 int timeoutcount=0;
-uint8_t btn;
+char btn = 'r';
 int dead=0;
 /* Interrupt Service Routine */
 void user_isr( void ) {
     if (IFS(0) & 0x0100 && dead!=1) {
-        btn = getbtns();
-        if(timeoutcount==2){
-            btn = getbtns();
+        if(timeoutcount==(6-snakeSpeed)){
             dead=movement(0);
         }
         
-        if (timeoutcount==4){
-            btn = getbtns();
+        if (timeoutcount==(6-snakeSpeed)*2){
             dead=movement(btn);
             timeoutcount=0;
             }
@@ -85,7 +82,7 @@ void labinit( void )
 
 void labwork( void ) {
     TMR2copy = TMR2;
-    btn = getbtns();
+    btn = getbtns(btn);
     display_bit_update();
 }
 
