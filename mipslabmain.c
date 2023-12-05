@@ -9,7 +9,8 @@
 
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include <stdlib.h>
 
@@ -63,12 +64,16 @@ int main(void) {
 	display_string(3, "Welcome!");
 	display_update();
 	display_image(96, icon);*/
-	
-	//menu();
-	
+
+
+
+	int num1,num2,num3,num4;
+	menu(&num1, &num2, &num3, &num4);
+
+	game_init(num1, num2, num3, num4);
 
 	labinit(); /* Do any lab-specific initialization */
-	game_init();
+
 	while( 1 )
 	{
 	  labwork(); /* Do lab-specific things again and again */

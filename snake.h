@@ -30,21 +30,21 @@ förflytnings cykel:
 */
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <stdio.h>
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include <stdlib.h>
 
 
 #define SIZE 2048
-#define appleCount 3     // Define how many apples should be on the display at once
-#define snakeSpeed 4     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
-#define wallInfinite 1   // 1 = Infinite wall, 0 = Walls on
+#define appleCount 1     // Define how many apples should be on the display at once
+
 #define opponent 0       // 1 = Opponent on, 0 = Opponent off
 
 int front = -1, rear = -1, inp_array[SIZE];
 int TMR2copy = 0;
 int currScore = 0;
-int appleCC = appleCount;
+int appleCC = 1;
 int end = 128*14+2;
 int head = 128*14+6;
 char temp_v = 'r';
@@ -63,7 +63,7 @@ char vektor = 'r';  // r = right, l = left, u = up, d = down
 
 
 int create_apple(int TMR2copy) {
-    int appleX = ((TMR2copy % 61) + 1)*2 + 1;  // Ensures appleX is >= 3, odd, and < 127
+    int appleX = ((TMR2copy % 61) + 1)*2;  // Ensures appleX is >= 3, odd, and < 127
     int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
 
     if (bitmap[appleX+appleY*128] != 0) {
@@ -79,19 +79,16 @@ int create_apple(int TMR2copy) {
 }
 
 void generate_walls(){
-    if (wallInfinite == 0) {
-        int i;
-        for ( i = 1; i < 127; i++) {
-            bitmap[i+128] = 2;
-            bitmap[i+128*30] = 2;
-        }
-        int j;
-        for ( j = 1; j < 31; j++) {
-            bitmap[j*128 + 1] = 2;
-            bitmap[j*128+126] = 2;
-        }
+    int i;
+    for ( i = 1; i < 127; i++) {
+        bitmap[i+128] = 2;
+        bitmap[i+128*30] = 2;
     }
-    return;
+    int j;
+    for ( j = 1; j < 31; j++) {
+        bitmap[j*128 + 1] = 2;
+        bitmap[j*128+126] = 2;
+    }
 }
 
 /*
