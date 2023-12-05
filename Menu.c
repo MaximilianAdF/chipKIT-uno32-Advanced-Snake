@@ -10,13 +10,13 @@ int current_menu=0;
 int snakespeed = 3;
 int apples = 1;
 int number = 5;
-int walls = 0;
+int walls = 1;
 int ai = 0;
 
-/* test files*/
+/* test files difficulty*/
 char text[]="     Snake      >    start           modes         highscore    ";
 char main_text[]="     Snake      >    start           modes         highscore    ";
-char mode_text[]=">   Dificuly       multi apple       no walls        1 vs AI    ";
+char mode_text[]=">  DIFFICULTY        APPELS          WALLS          1 vs AI    ";
 char highscore_text[]=">    ___:---         ___:---         ___:---         ___:---     ";
 char dificulty_text[]="   Dificulty           V               5               ^     "; 
 char apple_text[]="     Apple             V               1               ^     ";
