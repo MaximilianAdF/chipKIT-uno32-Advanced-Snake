@@ -37,10 +37,10 @@ char get_direction(int head, int final_pos, int vektor) {
     char* safeMoves = get_safe_moves(head);
     if (headX < finalX && vektor != 'l' && safeMoves[0] == 'r') {
         return 'r';
-    } else if (headY < finalY && vektor != 'd' && safeMoves[2] == 'u') {
-        return 'u';
     } else if (headX > finalX && vektor != 'r' && safeMoves[1] == 'l') {
         return 'l';
+    } else if (headY < finalY && vektor != 'd' && safeMoves[2] == 'u') {
+        return 'u';
     } else if (headY > finalY && vektor != 'u' && safeMoves[3] == 'd') {
         return 'd';
     }
@@ -50,7 +50,7 @@ char get_direction(int head, int final_pos, int vektor) {
 
 char go_center(int head, char vektor) {
     //When apple is further away from AI than player, go towards center of board (coords 2048)
-    return get_direction(head, 2048, vektor);
+    return get_direction(head, 64 + 128*15, vektor);
 }
 
 char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
@@ -59,11 +59,18 @@ char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
     int AIheadY = AI_head/128;
     int playerHeadX = player_head%128;
     int playerHeadY = player_head/128;
-    int minDist;
-    int flag;
+    int minDist = 4096;
+    int flag = 0;
 
     int i = 0;
     for (i; i < appleCount; i++) {
+        if (apple_pos[i] == 0) {
+            continue;
+        }
+        if (bitmap[currApple] != 4) {
+            minDist = 4096;
+            flag = 0;
+        }
         if (wallInfinite == 1) {
             int appleX = apple_pos[i]%128;
             int appleY = apple_pos[i]/128;
