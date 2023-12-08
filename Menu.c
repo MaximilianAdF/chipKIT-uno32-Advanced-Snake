@@ -55,7 +55,7 @@ void swap(input){ // moves arrow upp or down
             }
         }
         if (input=='u'){
-            if (number<9){
+            if (number<5){
                 number++;
                 text[39]=number+ '0';
             }

@@ -22,12 +22,14 @@ int prime = 1234567;
 int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
+int AI;
 int wallInfinite;   // 1 = Infinite wall, 0 = Walls on
 int snakeSpeed;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 
 int timeoutcount=0;
 char btn = 'r';
-int dead=1;
+int player_dead;
+int AI_dead;
 
 char getbtns(char btn){
    uint8_t btn1 = (PORTF >> 1) & 0x1;
@@ -50,16 +52,19 @@ char getbtns(char btn){
 
 /* Interrupt Service Routine */
 void user_isr( void ) {
-    if(dead=1){
-        gameover(currScore,AI);
-    }
-    if (IFS(0) & 0x0100 && dead!=1) { 
-        if(timeoutcount==(10-snakeSpeed)){
-            dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
+    if (IFS(0) & 0x0100 && player_dead!=1) { 
+        if(timeoutcount==(6-snakeSpeed)){
+            if (AI == 1) {
+                AI_dead = movement(btn, &AI_head, &AI_end, &AI_vektor, 1);
+            }
+            player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
         }
         
-        if (timeoutcount==(10-snakeSpeed)*2){
-            dead=movement(0, &player_head, &player_end, &player_vektor, 0);
+        if (timeoutcount==(6-snakeSpeed)*2){
+            if (AI == 1) {
+                AI_dead = movement(0, &AI_head, &AI_end, &AI_vektor, 1);
+            }
+            player_dead=movement(0, &player_head, &player_end, &player_vektor, 0);
             timeoutcount=0;
             }
         IFS(0)&= ~(1 << 8);
@@ -96,10 +101,11 @@ void labinit( void )
     return;
 }
 
-void game_init(int speed, int apples, int walls, int AI){
+void game_init(int speed, int apples, int walls, int ai){
     last_apple = -apples;
     appleCount = apples;
     appleCC = apples;
+    AI = ai;
     
     snakeSpeed = speed;
 
@@ -107,7 +113,7 @@ void game_init(int speed, int apples, int walls, int AI){
     if (walls==1){
         generate_walls();
     }
-    if (AI == 1) {
+    if (ai == 1) {
         init_snake(AI_head); //Create the AI's snake
         int i = 0;
         for (i; i < 4; i++) { //Initial movements that AI does (account initial tail)
@@ -119,7 +125,8 @@ void game_init(int speed, int apples, int walls, int AI){
     for (i; i < 4; i++) { //Initial movements that player does (account initial tail)
         push('r', player_prev_movm, &player_front, &player_rear);
     }
-    dead=0;
+    player_dead=0;
+    AI_dead=0;
 }
 
 /* This function is called repetitively from the main program */

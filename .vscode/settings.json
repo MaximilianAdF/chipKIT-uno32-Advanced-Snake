@@ -4,6 +4,8 @@
         "stdlib.h": "c",
         "mipslab.h": "c",
         "stdint.h": "c",
-        "snake.h": "c"
+        "snake.h": "c",
+        "locale": "c",
+        "stdio.h": "c"
     }
 }

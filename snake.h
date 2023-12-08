@@ -211,7 +211,7 @@ void movement_remove(int *end, int AI) {
     int endY = *end/128;
     int stored_v;
     if (AI == 1) { // AI movement
-        stored_v = pop(dir_movm, &dir_front, &dir_rear);
+        stored_v = pop(ai_prev_movm, &ai_front, &ai_rear);
     } else {       // Player movement
         stored_v = pop(player_prev_movm, &player_front, &player_rear);
     }
@@ -268,7 +268,7 @@ int movement(uint8_t button, int *head, int *end, char *vektor, int AI){
         return 1;
     }
     if (AI == 1) {
-        push(*vektor, dir_movm, &dir_front, &dir_rear);
+        push(*vektor, ai_prev_movm, &ai_front, &ai_rear);
     } else {
         push(*vektor, player_prev_movm, &player_front, &player_rear);
     }

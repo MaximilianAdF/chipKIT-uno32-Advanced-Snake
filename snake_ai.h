@@ -8,35 +8,49 @@
 // Needs to run 24/7 so that it can react to player movement, runs independently of apple_proximity.
 // Add a flag to apple_proximity so that we don't add unnecessary "safe movements" when we have a path to an apple.
 
-char get_direction(int head, int apple_pos, int vektor) {
+int currApple; //The position of the apple that the AI is currently going for
+
+char* get_safe_moves(int head) {
+    char temp[4] = {'0', '0', '0', '0'};
+    if (bitmap[head+2] == 0) {
+        temp[0] = 'r';
+    }
+    if (bitmap[head-1] == 0) {
+        temp[1] = 'l';
+    }
+    
+    if (bitmap[head-128] == 0) {
+        temp[2] = 'u';
+    }
+    if (bitmap[head+2*128] == 0) {
+        temp[3] = 'd';
+    }
+    return temp;
+}
+
+char get_direction(int head, int final_pos, int vektor) {
     //Add wallInfinite = 1 or 0 functionality
     int headX = head%128;
     int headY = head/128;
-    int appleX = apple_pos%128;
-    int appleY = apple_pos/128;
+    int finalX = final_pos%128;
+    int finalY = final_pos/128;
 
-    if (headX < appleX && vektor != 'l') {
+    char* safeMoves = get_safe_moves(head);
+    if (headX < finalX && vektor != 'l' && safeMoves[0] == 'r') {
         return 'r';
-    } else if (headX > appleX && vektor != 'r') {
+    } else if (headX > finalX && vektor != 'r' && safeMoves[1] == 'l') {
         return 'l';
-    } else if (headY < appleY && vektor != 'd') {
+    } else if (headY < finalY && vektor != 'd' && safeMoves[2] == 'u') {
         return 'u';
-    } else if (headY > appleY && vektor != 'u') {
+    } else if (headY > finalY && vektor != 'u' && safeMoves[3] == 'd') {
         return 'd';
     }
 }
 
-void find_path(int AI_head, int apple_pos, int totalDiffPlayer, int totalDiffAI, char AI_vektor) {
-    //If obstacle in front of AI, find path around it, add extra movements to totalDiffAI and check that still smaller than totalDiffPlayer
-    //Should we also find path for a player and compare the two??
-    
-    int player_pos = player_head;
-    int AI_pos = AI_head;
-    while (AI_pos != apple_pos && totalDiffAI < totalDiffPlayer) { // Check if apple has been reached or if AI is further away than player
-        char travel_dir = get_direction(player_pos, apple_pos, player_vektor); // Get directions to apple for player
-        char travel_dir_AI = get_direction(AI_pos, apple_pos, AI_vektor); // Get directions to apple for AI
-        
-    }
+
+char go_center(int head, char vektor) {
+    //When apple is further away from AI than player, go towards center of board (coords 2048)
+    return get_direction(head, 2048, vektor);
 }
 
 char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
@@ -45,32 +59,30 @@ char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
     int AIheadY = AI_head/128;
     int playerHeadX = player_head%128;
     int playerHeadY = player_head/128;
+    int minDist;
+    int flag;
 
     int i = 0;
     for (i; i < appleCount; i++) {
-        int appleX = apple_pos[i]%128;
-        int appleY = apple_pos[i]/128;
-
-
-
-        //Calculate distance between AI head and apple (wallInfinite = 0)
-        int xDiffAI = appleX - AIheadX;
-        int yDiffAI = appleY - AIheadY;
-        int totalDiffAI = xDiffAI + yDiffAI;
-
-        //Calculate distance between player head and apple (wallInfinite = 0)
-        int xDiffPlayer = appleX - playerHeadX;
-        int yDiffPlayer = appleY - playerHeadY;
-        int totalDiffPlayer = xDiffPlayer + yDiffPlayer;
-
         if (wallInfinite == 1) {
+            int appleX = apple_pos[i]%128;
+            int appleY = apple_pos[i]/128;
+        } else {
+            //Calculate distance between player head and apple (wallInfinite = 0)
+            int totalDiffPlayer = abs(player_head - apple_pos[i]);
+            //Calculate distance between AI head and apple (wallInfinite = 0)
+            int totalDiffAI = abs(AI_head - apple_pos[i]);        
 
-        }
-
-        //If AI is closer to apple than player, find path to apple
-        if (totalDiffAI < totalDiffPlayer) {
-            find_path(AI_head, apple_pos[i], totalDiffPlayer, totalDiffAI, AI_vektor);
+            if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
+                currApple = apple_pos[i];
+                minDist = totalDiffAI;
+                flag = 1;
+            }
         }
     }
+    if (flag == 1) {
+        return get_direction(AI_head, currApple, AI_vektor);
+    }
+    return go_center(AI_head, AI_vektor);
 }
 
