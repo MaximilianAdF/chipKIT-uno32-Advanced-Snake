@@ -29,38 +29,66 @@ förflytnings cykel:
     6.2 om äpple, gör inget
 */
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include <stdio.h>
-//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
-#include "\msys64\opt\mcb32tools\include\pic32mx.h"
+#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
+//#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include <stdlib.h>
 
 
-#define SIZE 2048
+#define SIZE 1024
 #define appleCount 3     // Define how many apples should be on the display at once
-#define opponent 0       // 1 = Opponent on, 0 = Opponent off
 
 int apple_pos[appleCount];           // Array to store the position of the apples
 int last_apple = -appleCount;        // Variable to store the pos in array of last apple that was eaten
-int front = -1, rear = -1, inp_array[SIZE];
+int player_front = -1, player_rear = -1; 
+char player_prev_movm[SIZE];
 int currScore = 0;
 int appleCC = 1;
-int end = 128*14+2;
-int head = 128*14+6;
-char temp_v = 'r';
-char vektor = 'r';  // r = right, l = left, u = up, d = down
-/*
-1.kolla input
-2.ändra konstanten som adderas
-*/
+int player_end = 128 * 14 + 2;
+int player_head = 128 * 14 + 6;     
+char player_vektor = 'r';  // r = right, l = left, u = up, d = down
 
 
-/*
- Generate the outline of the snake game (the walls) 
- incase infinite walls game mode has not been selected
-*/
+int dir_front = -1, dir_rear = -1;
+int ai_front = -1, ai_rear = -1;
+char ai_prev_movm[SIZE];
+char dir_movm[SIZE];
+
+int AI_head = 128 * 15 - 8;      //AI snake head
+int AI_end = 128 * 15 - 4;       //AI snake tail
+char AI_vektor = 'l';             // r = right, l = left, u = up, d = down
 
 
+void push(int x, char arr[], int *front, int *rear) {
+    if (*front == -1) {
+        *front = 0;
+        *rear = 0;
+    }
+    *rear = (*rear + 1) % SIZE; // Circular increment to prevent array overflow
+    arr[*rear] = x;
+}
+
+int pop(char arr[], int *front, int *rear) {
+    if (*front == -1) {
+        return -1; // Assuming -1 is an invalid value; you can choose a different approach
+    }
+
+    int poppedElem = arr[*front];
+    if (*front == *rear) {
+        *front = *rear = -1;
+    } else {
+        *front = (*front + 1) % SIZE; // Circular increment to prevent array overflow
+    }
+    return poppedElem;
+}
+
+void generate_opponent() {
+    int i = 0;
+    for (i; i < 6; i++) {
+        bitmap[AI_head+i] = 1;
+        bitmap[AI_head+i+128] = 1;
+    }
+}
 
 int create_apple(int TMR2copy) {
     int appleX = ((TMR2copy % 61) + 1)*2;  // Ensures appleX is >= 3, odd, and < 127
@@ -84,6 +112,10 @@ int create_apple(int TMR2copy) {
     }
 }
 
+/*
+ Generate the outline of the snake game (the walls) 
+ incase infinite walls game mode has not been selected
+*/
 void generate_walls(){
     int i;
     for ( i = 1; i < 127; i++) {
@@ -97,22 +129,18 @@ void generate_walls(){
     }
 }
 
-/*
- 1. Check if snake has hit itself ('1' in bitmap)
- 2. Check if snake has hit wall ('2' in bitmap)
- 3. Check if snake has it obstacle ('3' in bitmap)
- 4. Check if snake has hit apple ('4' in bitmap)
-*/
-int check_obstacle(){
-    int headX = head%128;
-    int headY = head/128;
-    if (vektor == 'r') {
+
+int check_obstacle(int *head, char *vektor){
+    int headX = *head%128;
+    int headY = *head/128;
+    if (*vektor == 'r') {
         if (bitmap[headY*128 + (headX+2)%128] == 1 || bitmap[headY*128 + (headX+2)%128] == 2 || bitmap[headY*128 + (headX+2)%128] == 3) {
             // Game over
             return 1;
         }
         else if (bitmap[headY*128 + (headX+2)%128] == 4) {
-            for (int i = 0; i < appleCount; i++) {
+            int i = 0;
+            for (i; i < appleCount; i++) {
                 if (apple_pos[i] == headY*128 + (headX+2)%128) {
                     last_apple = i;
                     break;
@@ -121,14 +149,15 @@ int check_obstacle(){
             return 4;
         }
     }
-    else if (vektor == 'l') {
+    else if (*vektor == 'l') {
         if (bitmap[headY*128 + (headX+128-1)%128] == 1 || bitmap[headY*128 + (headX+128-1)%128] == 2 || bitmap[headY*128 + (headX+128-1)%128] == 3) {
             // Game over
             return 1;
         }
         else if (bitmap[headY*128 + (headX+128-1)%128] == 4) {
             // Eat apple
-            for (int i = 0; i < appleCount; i++) {
+            int i = 0;
+            for (i; i < appleCount; i++) {
                 if (apple_pos[i] == headY*128 + (headX+128-1)%128) {
                     last_apple = i;
                     break;
@@ -137,14 +166,15 @@ int check_obstacle(){
             return 4;
         }
     }
-    else if (vektor == 'u') {
+    else if (*vektor == 'u') {
         if (bitmap[((headY+32-1)%32)*128 + headX] == 1 || bitmap[((headY+32-1)%32)*128 + headX] == 2 || bitmap[((headY+32-1)%32)*128 + headX] == 3) {
             // Game over
             return 1;
         }
         else if (bitmap[((headY+32-1)%32)*128 + headX] == 4) {
             // Eat apple
-            for (int i = 0; i < appleCount; i++) {
+            int i = 0;
+            for (i; i < appleCount; i++) {
                 if (apple_pos[i] == ((headY+32-1)%32)*128 + headX) {
                     last_apple = i;
                     break;
@@ -153,14 +183,15 @@ int check_obstacle(){
             return 4;
         }
     }
-    else if (vektor == 'd') {
+    else if (*vektor == 'd') {
         if (bitmap[((headY+2)%32)*128 + headX] == 1 || bitmap[((headY+2)%32)*128 + headX] == 2 || bitmap[((headY+2)%32)*128 + headX] == 3) {
             // Game over
             return 1;
         }
         else if (bitmap[((headY+2)%32)*128 + headX] == 4) {
             // Eat apple
-            for (int i = 0; i < appleCount; i++) {
+            int i = 0;
+            for (i; i < appleCount; i++) {
                 if (apple_pos[i] == ((headY+2)%32)*128 + headX) {
                     last_apple = i;
                     break;
@@ -172,111 +203,95 @@ int check_obstacle(){
     return 0;
 }
 
-void push(int x) {
-    if (front == -1) {
-        front = 0;
+
+void movement_remove(int *end, int AI) { 
+    int endX = *end%128;
+    int endY = *end/128;
+    int stored_v;
+    if (AI == 1) { // AI movement
+        stored_v = pop(dir_movm, &dir_front, &dir_rear);
+    } else {       // Player movement
+        stored_v = pop(player_prev_movm, &player_front, &player_rear);
     }
-    rear = (rear + 1) % SIZE; // Circular increment to prevent array overflow
-    inp_array[rear] = x;
-}
-
-int pop() {
-    if (front == -1) {
-        // Queue is empty, handle the situation accordingly
-        return -1; // Assuming -1 is an invalid value; you can choose a different approach
-    }
-
-    int poppedElem = inp_array[front];
-    if (front == rear) {
-        front = rear = -1;
-    } else {
-        front = (front + 1) % SIZE; // Circular increment to prevent array overflow
-    }
-    return poppedElem;
-}
-
-
-void movement_remove() { 
-    int endX = end%128;
-    int endY = end/128;
-    int stored_v = pop();
 
     if(stored_v == 'l'){
         bitmap[endY*128 + (endX+1)%128]=0;
         bitmap[endY*128 + (endX+1)%128 + 128]=0;
-        end=endY*128 + (128+endX-1)%128;
+        *end=endY*128 + (128+endX-1)%128;
     }
     else if(stored_v == 'r'){
         bitmap[endY*128 + endX]=0;
         bitmap[endY*128 + endX+128]=0; 
-        end=endY*128 + (endX+1)%128;
+        *end=endY*128 + (endX+1)%128;
     }   
     else if(stored_v == 'd'){
         bitmap[((endY)%32)*128 + endX]=0;
         bitmap[((endY)%32)*128 + endX+1]=0;
-        end=((endY+1)%32)*128 + endX;
+        *end=((endY+1)%32)*128 + endX;
     }
     else if(stored_v == 'u'){
         bitmap[((endY+1)%32)*128 + endX]=0;
         bitmap[((endY+1)%32)*128 + endX+1]=0;
-        end=((endY+32-1)%32)*128 + endX;
+        *end=((endY+32-1)%32)*128 + endX;
     }
 }
 
-int movement(uint8_t button){
+int movement(uint8_t button, int *head, int *end, char *vektor, int AI){
 
-    if(button=='l' && vektor != 'r'){
-        vektor = button;
+    if(button=='l' && *vektor != 'r'){
+        *vektor = button;
     }
-    if(button=='r' && vektor != 'l'){
-        vektor = button;
+    if(button=='r' && *vektor != 'l'){
+        *vektor = button;
     }
-    if(button=='u' && vektor != 'd'){
-        vektor = button;
+    if(button=='u' && *vektor != 'd'){
+        *vektor = button;
     }
-    if(button=='d' && vektor != 'u'){
-        vektor = button;
+    if(button=='d' && *vektor != 'u'){
+        *vektor = button;
     }
     
-    int next_step = check_obstacle();
+    int next_step = check_obstacle(head, vektor);
     
     if (next_step == 4) {
-
         currScore++;
         appleCC++;
     }
 
     if (next_step!=4 && next_step !=5){
-        movement_remove();
+        movement_remove(end, AI);
     }
     
     if (next_step==1){
         return 1;
     }
-
-    push(vektor);
-    int headX = head%128;
-    int headY = head/128;
-    if (vektor == 'l'){
+    if (AI == 1) {
+        push(*vektor, dir_movm, &dir_front, &dir_rear);
+    } else {
+        push(*vektor, player_prev_movm, &player_front, &player_rear);
+    }
+    int headX = *head%128;
+    int headY = *head/128;
+    if (*vektor == 'l'){
         bitmap[headY*128 + (128+headX-1)%128]=1;
         bitmap[headY*128 + (128+headX-1)%128 + 128]=1;
-        head=headY*128 + (128+headX-1)%128;
+        *head=headY*128 + (128+headX-1)%128;
     }
-    else if(vektor == 'r'){
+    else if(*vektor == 'r'){
         bitmap[headY*128 + (headX+2)%128]=1;
         bitmap[headY*128 + (headX+2)%128 + 128]=1;
-        head=headY*128 + (headX+1)%128;
+        *head=headY*128 + (headX+1)%128;
     }
-    else if(vektor == 'd'){
+    else if(*vektor == 'd'){
         bitmap[((headY+2)%32)*128 + headX]=1;
         bitmap[((headY+2)%32)*128 + headX+1]=1;
-        head=((headY+1)%32)*128 + headX;
+        *head=((headY+1)%32)*128 + headX;
 
     }
-    else if(vektor == 'u'){
+    else if(*vektor == 'u'){
         bitmap[((headY+32-1)%32)*128 + headX]=1;
         bitmap[((headY+32-1)%32)*128 + headX+1]=1;
-        head=((headY+32-1)%32)*128 + headX;
+        *head=((headY+32-1)%32)*128 + headX;
     }
     return 0;
 }

@@ -3,6 +3,7 @@
     "files.associations": {
         "stdlib.h": "c",
         "mipslab.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "snake.h": "c"
     }
 }

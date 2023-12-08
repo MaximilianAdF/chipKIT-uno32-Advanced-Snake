@@ -1,6 +1,6 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
-#include "\msys64\opt\mcb32tools\include\pic32mx.h"
+#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+//#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 char starter='0';
 int current=1;
@@ -190,11 +190,11 @@ int menu(int *a, int *b, int *c, int *d){
         if (input=='u'|| input=='d'){
             swap(input);
             input=0;
-            delay(500);
+            quicksleep(1000000);
         }else if (input!=0){
             click(input);
             input=0;
-            delay(500);
+            quicksleep(1000000);
         }
     }
     *a = snakespeed;

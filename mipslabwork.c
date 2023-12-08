@@ -11,31 +11,52 @@
    For copyright and licensing, see file COPYING */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
-#include "\msys64\opt\mcb32tools\include\pic32mx.h"
+#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+//#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include "snake.h"
 #include <stdlib.h>
+
 
 int prime = 1234567;    
 int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
-int snakeSpeed= 4;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
-#define wallInfinite 1   // 1 = Infinite wall, 0 = Walls on
+int snakeSpeed= 4;      // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+int wallInfinite = 1;   // 1 = Infinite wall, 0 = Walls on
 
 int timeoutcount=0;
 char btn = 'r';
 int dead=1;
+
+char getbtns(char btn){
+   uint8_t btn1 = (PORTF >> 1) & 0x1;
+   uint8_t btn234 = (PORTD >> 5) & 0x7;
+   
+   if (btn1){
+      return 'r';
+   }
+   if (btn234 & 0x1){
+      return 'd';
+   }
+   if (btn234 & 0x2){
+      return 'u';
+   }
+   if (btn234 & 0x4){
+      return 'l';
+   }
+   return btn;
+}
+
 /* Interrupt Service Routine */
 void user_isr( void ) {
     if (IFS(0) & 0x0100 && dead!=1) { 
         if(timeoutcount==(10-snakeSpeed)){
-            dead=movement(btn);
+            dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
         }
         
         if (timeoutcount==(10-snakeSpeed)*2){
-            dead=movement(0);
+            dead=movement(0, &player_head, &player_end, &player_vektor, 0);
             timeoutcount=0;
             }
         IFS(0)&= ~(1 << 8);
@@ -72,27 +93,28 @@ void labinit( void )
     return;
 }
 
-void game_init(int speed, int apples, int walls, int ai){
+void game_init(int speed, int apples, int walls, int AI){
     snakeSpeed=speed;
     appleCC=apples;
     if (walls==1){
         generate_walls();
     }
-    if (opponent == 1) {
+    if (AI == 1) {
         generate_opponent();
+        int i = 0;
+        for (i; i < 4; i++) { //Initial movements that AI does (account initial tail)
+            push('l', dir_movm, &dir_front, &dir_rear);
+        }
     }
 
-    push('r');
-    push('r');
-    push('r');
-    push('r');
+    int i = 0;
+    for (i; i < 4; i++) { //Initial movements that player does (account initial tail)
+        push('r', player_prev_movm, &player_front, &player_rear);
+    }
     dead=0;
 }
 
 /* This function is called repetitively from the main program */
-
-
-
 void labwork( void ) {
     volatile uint32_t *PORTE_ptr = (volatile uint32_t*)0xbf886110; //Define leds
     *PORTE_ptr = currScore; //Update the leds with score
