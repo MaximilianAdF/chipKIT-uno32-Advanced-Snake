@@ -50,6 +50,9 @@ char getbtns(char btn){
 
 /* Interrupt Service Routine */
 void user_isr( void ) {
+    if(dead=1){
+        gameover(currScore,AI);
+    }
     if (IFS(0) & 0x0100 && dead!=1) { 
         if(timeoutcount==(10-snakeSpeed)){
             dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
