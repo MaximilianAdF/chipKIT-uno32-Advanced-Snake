@@ -50,11 +50,8 @@ int player_head = 128 * 14 + 6; // Player snake head
 int player_end = 128 * 14 + 2;  // Player snake tail
 char player_vektor = 'r';       // r = right, l = left, u = up, d = down
 
-
-int dir_front = -1, dir_rear = -1;
 int ai_front = -1, ai_rear = -1;
 char ai_prev_movm[SIZE];
-char dir_movm[SIZE];
 
 int AI_head = 128 * 15 - 8;      //AI snake head
 int AI_end = 128 * 15 - 4;       //AI snake tail
