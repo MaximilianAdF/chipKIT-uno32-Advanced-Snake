@@ -11,7 +11,8 @@
    For copyright and licensing, see file COPYING */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include "snake.h"
 #include <stdlib.h>
@@ -20,6 +21,8 @@ int prime = 1234567;
 int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
+int snakeSpeed= 4;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define wallInfinite 1   // 1 = Infinite wall, 0 = Walls on
 
 int timeoutcount=0;
 char btn = 'r';
@@ -27,12 +30,12 @@ int dead=1;
 /* Interrupt Service Routine */
 void user_isr( void ) {
     if (IFS(0) & 0x0100 && dead!=1) { 
-        if(timeoutcount==(7-snakeSpeed)){
-            dead=movement(0);
+        if(timeoutcount==(10-snakeSpeed)){
+            dead=movement(btn);
         }
         
-        if (timeoutcount==(7-snakeSpeed)*2){
-            dead=movement(btn);
+        if (timeoutcount==(10-snakeSpeed)*2){
+            dead=movement(0);
             timeoutcount=0;
             }
         IFS(0)&= ~(1 << 8);
@@ -68,11 +71,17 @@ void labinit( void )
 
     return;
 }
-void game_init(void){
-    generate_walls();
+
+void game_init(int speed, int apples, int walls, int ai){
+    snakeSpeed=speed;
+    appleCC=apples;
+    if (walls==1){
+        generate_walls();
+    }
     if (opponent == 1) {
         generate_opponent();
     }
+
     push('r');
     push('r');
     push('r');

@@ -5,7 +5,8 @@
    For copyright and licensing, see file COPYING */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 
 /* Declare a helper function which is local to this file */
@@ -127,18 +128,30 @@ void display_init(void) {
 }
 
 void display_string(int line, char *s) {
-	int i;
+	int i,j;
 	if(line < 0 || line >= 4)
 		return;
 	if(!s)
 		return;
-	
-	for(i = 0; i < 16; i++)
+	if(*s>16){
+    for (j=0;j<4;j++){
+      	for(i = 0; i < 16; i++)
+		if(*s) {
+			textbuffer[j][i] = *s;
+			s++;
+		} else
+			textbuffer[j][i] = ' ';
+
+    }
+  }
+	else{
+    for(i = 0; i < 16; i++)
 		if(*s) {
 			textbuffer[line][i] = *s;
 			s++;
 		} else
 			textbuffer[line][i] = ' ';
+      }
 }
 
 void display_image(int x, const uint8_t *data) {
