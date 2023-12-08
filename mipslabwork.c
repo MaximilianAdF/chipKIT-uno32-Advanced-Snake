@@ -53,9 +53,9 @@ char getbtns(char btn){
 /* Interrupt Service Routine */
 void user_isr( void ) {
     if (IFS(0) & 0x0100 && player_dead!=1) { 
+        char dir = apple_proximity(AI_head, AI_vektor, wallInfinite);
         if(timeoutcount==(6-snakeSpeed)){
             if (AI == 1) {
-                char dir = apple_proximity(AI_head, AI_vektor, wallInfinite);
                 AI_dead = movement(dir, &AI_head, &AI_end, &AI_vektor, 1);
             }
             player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
