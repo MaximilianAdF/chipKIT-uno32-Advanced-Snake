@@ -14,7 +14,7 @@
 #include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
 //#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
-#include "snake.h"
+#include "snake_ai.h"
 #include <stdlib.h>
 
 
@@ -55,7 +55,8 @@ void user_isr( void ) {
     if (IFS(0) & 0x0100 && player_dead!=1) { 
         if(timeoutcount==(6-snakeSpeed)){
             if (AI == 1) {
-                AI_dead = movement(btn, &AI_head, &AI_end, &AI_vektor, 1);
+                char dir = apple_proximity(AI_head, AI_vektor, wallInfinite);
+                AI_dead = movement(dir, &AI_head, &AI_end, &AI_vektor, 1);
             }
             player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
         }

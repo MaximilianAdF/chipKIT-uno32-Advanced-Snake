@@ -6,6 +6,7 @@
         "stdint.h": "c",
         "snake.h": "c",
         "locale": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "snake_ai.h": "c"
     }
 }
