@@ -37,12 +37,13 @@ förflytnings cykel:
 
 #define SIZE 2048
 #define appleCount 3     // Define how many apples should be on the display at once
-#define snakeSpeed 4     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
+#define snakeSpeed 5     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 #define wallInfinite 1   // 1 = Infinite wall, 0 = Walls on
 #define opponent 0       // 1 = Opponent on, 0 = Opponent off
 
+int apple_pos[appleCount];           // Array to store the position of the apples
+int last_apple = -appleCount;        // Variable to store the pos in array of last apple that was eaten
 int front = -1, rear = -1, inp_array[SIZE];
-int TMR2copy = 0;
 int currScore = 0;
 int appleCC = appleCount;
 int end = 128*14+2;
@@ -66,13 +67,19 @@ int create_apple(int TMR2copy) {
     int appleX = ((TMR2copy % 61) + 1)*2 + 1;  // Ensures appleX is >= 3, odd, and < 127
     int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
 
-    if (bitmap[appleX+appleY*128] != 0) {
+    if (bitmap[appleX+appleY*128] != 0 || bitmap[appleX+appleY*128+1] != 0 || bitmap[appleX+appleY*128+128] != 0 || bitmap[appleX+appleY*128+1+128] != 0) {
         return 0;
     } else {
         bitmap[appleX+appleY*128] = 4; 
         bitmap[appleX+appleY*128+1] = 5;
         bitmap[appleX+appleY*128+128] = 5;
         bitmap[appleX+appleY*128+1+128] = 5;
+        if (last_apple < 0) {  //Initialize all apples (Start of game)
+            apple_pos[appleCount+last_apple] = appleX+appleY*128;
+            last_apple++;
+        } else {
+            apple_pos[last_apple] = appleX+appleY*128;
+        }
         appleCC--;
         return 1;
     }
@@ -109,7 +116,12 @@ int check_obstacle(){
             return 1;
         }
         else if (bitmap[headY*128 + (headX+2)%128] == 4) {
-            // Eat apple
+            for (int i = 0; i < appleCount; i++) {
+                if (apple_pos[i] == headY*128 + (headX+2)%128) {
+                    last_apple = i;
+                    break;
+                }
+            }
             return 4;
         }
     }
@@ -120,6 +132,12 @@ int check_obstacle(){
         }
         else if (bitmap[headY*128 + (headX+128-1)%128] == 4) {
             // Eat apple
+            for (int i = 0; i < appleCount; i++) {
+                if (apple_pos[i] == headY*128 + (headX+128-1)%128) {
+                    last_apple = i;
+                    break;
+                }
+            }
             return 4;
         }
     }
@@ -130,6 +148,12 @@ int check_obstacle(){
         }
         else if (bitmap[((headY+32-1)%32)*128 + headX] == 4) {
             // Eat apple
+            for (int i = 0; i < appleCount; i++) {
+                if (apple_pos[i] == ((headY+32-1)%32)*128 + headX) {
+                    last_apple = i;
+                    break;
+                }
+            }
             return 4;
         }
     }
@@ -140,6 +164,12 @@ int check_obstacle(){
         }
         else if (bitmap[((headY+2)%32)*128 + headX] == 4) {
             // Eat apple
+            for (int i = 0; i < appleCount; i++) {
+                if (apple_pos[i] == ((headY+2)%32)*128 + headX) {
+                    last_apple = i;
+                    break;
+                }
+            }
             return 4;
         }
     }
@@ -215,6 +245,7 @@ int movement(uint8_t button){
     int next_step = check_obstacle();
     
     if (next_step == 4) {
+
         currScore++;
         appleCC++;
     }

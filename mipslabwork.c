@@ -70,12 +70,14 @@ void labinit( void )
 }
 void game_init(void){
     generate_walls();
+    if (opponent == 1) {
+        generate_opponent();
+    }
     push('r');
     push('r');
     push('r');
     push('r');
     dead=0;
-
 }
 
 /* This function is called repetitively from the main program */
