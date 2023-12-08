@@ -8,14 +8,6 @@
 // Needs to run 24/7 so that it can react to player movement, runs independently of apple_proximity.
 // Add a flag to apple_proximity so that we don't add unnecessary "safe movements" when we have a path to an apple.
 
-void generate_opponent() {
-    int i = 0;
-    for (i; i < 6; i++) {
-        bitmap[AI_head+i] = 1;
-        bitmap[AI_head+i+128] = 1;
-    }
-}
-
 char get_direction(int head, int apple_pos, int vektor) {
     //Add wallInfinite = 1 or 0 functionality
     int headX = head%128;
@@ -43,7 +35,7 @@ void find_path(int AI_head, int apple_pos, int totalDiffPlayer, int totalDiffAI,
     while (AI_pos != apple_pos && totalDiffAI < totalDiffPlayer) { // Check if apple has been reached or if AI is further away than player
         char travel_dir = get_direction(player_pos, apple_pos, player_vektor); // Get directions to apple for player
         char travel_dir_AI = get_direction(AI_pos, apple_pos, AI_vektor); // Get directions to apple for AI
-
+        
     }
 }
 

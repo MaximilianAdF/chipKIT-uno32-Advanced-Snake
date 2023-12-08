@@ -36,17 +36,19 @@ förflytnings cykel:
 
 
 #define SIZE 1024
-#define appleCount 3     // Define how many apples should be on the display at once
 
-int apple_pos[appleCount];           // Array to store the position of the apples
-int last_apple = -appleCount;        // Variable to store the pos in array of last apple that was eaten
+int apple_pos[5] = {0,0,0,0,0};         // Array to store all the positions of the apples
+int appleCount;                         // Initial appleCount set from main menu
+int last_apple;                         // Variable to store the pos in array of last apple that was eaten
+int appleCC;                            // The amount of apples that need to be generated to reach appleCount
+
 int player_front = -1, player_rear = -1; 
 char player_prev_movm[SIZE];
 int currScore = 0;
-int appleCC = 1;
-int player_end = 128 * 14 + 2;
-int player_head = 128 * 14 + 6;     
-char player_vektor = 'r';  // r = right, l = left, u = up, d = down
+
+int player_head = 128 * 14 + 6; // Player snake head  
+int player_end = 128 * 14 + 2;  // Player snake tail
+char player_vektor = 'r';       // r = right, l = left, u = up, d = down
 
 
 int dir_front = -1, dir_rear = -1;
@@ -56,7 +58,7 @@ char dir_movm[SIZE];
 
 int AI_head = 128 * 15 - 8;      //AI snake head
 int AI_end = 128 * 15 - 4;       //AI snake tail
-char AI_vektor = 'l';             // r = right, l = left, u = up, d = down
+char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
 
 void push(int x, char arr[], int *front, int *rear) {
@@ -82,11 +84,11 @@ int pop(char arr[], int *front, int *rear) {
     return poppedElem;
 }
 
-void generate_opponent() {
+void init_snake(int head) {
     int i = 0;
     for (i; i < 6; i++) {
-        bitmap[AI_head+i] = 1;
-        bitmap[AI_head+i+128] = 1;
+        bitmap[head+i] = 1;
+        bitmap[head+i+128] = 1;
     }
 }
 

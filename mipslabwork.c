@@ -22,8 +22,8 @@ int prime = 1234567;
 int mytime = 0x5957;
 char textstring[] = "text, more text, and even more text!";
 
-int snakeSpeed= 4;      // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
-int wallInfinite = 1;   // 1 = Infinite wall, 0 = Walls on
+int wallInfinite;   // 1 = Infinite wall, 0 = Walls on
+int snakeSpeed;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 
 int timeoutcount=0;
 char btn = 'r';
@@ -94,16 +94,21 @@ void labinit( void )
 }
 
 void game_init(int speed, int apples, int walls, int AI){
-    snakeSpeed=speed;
-    appleCC=apples;
+    last_apple = -apples;
+    appleCount = apples;
+    appleCC = apples;
+    
+    snakeSpeed = speed;
+
+    init_snake(player_end); //Create the player's snake
     if (walls==1){
         generate_walls();
     }
     if (AI == 1) {
-        generate_opponent();
+        init_snake(AI_head); //Create the AI's snake
         int i = 0;
         for (i; i < 4; i++) { //Initial movements that AI does (account initial tail)
-            push('l', dir_movm, &dir_front, &dir_rear);
+            push('l', ai_prev_movm, &ai_front, &ai_rear);
         }
     }
 

@@ -76,6 +76,7 @@ int main(void) {
 
 	while( 1 )
 	{
+		
 	  labwork(); /* Do lab-specific things again and again */
 	}
 	return 0;
