@@ -9,8 +9,8 @@
 
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
-//#include "\msys64\opt\mcb32tools\include\pic32mx.h"
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include <stdlib.h>
 
@@ -58,26 +58,20 @@ int main(void) {
 	SPI2CONSET = 0x8000;
 	
 	display_init();
-	/*display_string(0, "KTH/ICT lab");
-	display_string(1, "in Computer");
-	display_string(2, "Engineering");
-	display_string(3, "Welcome!");
-	display_update();
-	display_image(96, icon);*/
-
-
 
 	int num1,num2,num3,num4;
+	while(1){
 	menu(&num1, &num2, &num3, &num4);
 
 	game_init(num1, num2, num3, num4);
 
 	labinit(); /* Do any lab-specific initialization */
-
-	while( 1 )
-	{
-		
-	  labwork(); /* Do lab-specific things again and again */
+	char dead=0;
+		while( dead==0 )
+		{
+	  		labwork(); /* Do lab-specific things again and again */
+		}
+		//gameover();
 	}
 	return 0;
 }

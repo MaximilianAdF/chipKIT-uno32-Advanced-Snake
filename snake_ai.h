@@ -1,5 +1,6 @@
 #include <stdint.h>
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"
 #include <stdlib.h>
 #include "snake.h"

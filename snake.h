@@ -29,8 +29,8 @@ förflytnings cykel:
     6.2 om äpple, gör inget
 */
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
-//#include "\msys64\opt\mcb32tools\include\pic32mx.h"
+//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
+#include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 #include <stdlib.h>
 
