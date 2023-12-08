@@ -131,7 +131,7 @@ void game_init(int speed, int apples, int walls, int ai){
 }
 
 /* This function is called repetitively from the main program */
-void labwork() {
+int labwork() {
     volatile uint32_t *PORTE_ptr = (volatile uint32_t*)0xbf886110; //Define leds
     *PORTE_ptr = currScore; //Update the leds with score
 
@@ -142,6 +142,6 @@ void labwork() {
     btn = getbtns(btn);
     display_bit_update();
 
-    return dead;
+    return player_dead;
 }
 

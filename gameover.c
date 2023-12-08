@@ -5,9 +5,9 @@
 int curr=0;
 int num=0;
 char new_highscore_text[]=" New Highscore       V                AAA:___           ^       ";
-char highscore_text[]="     ___:---         ___:---         ___:---         ___:---     ";
 
-char highscore_swap(int score,int poss){
+
+char highscore_swap(char text[],int score,int poss){
     // Extract digits one by one
     char buffer[3];
     char buffer2[3];
@@ -18,22 +18,23 @@ char highscore_swap(int score,int poss){
         i++;
         score /= 10;
     }
-    for (int i=0; i<3;i++){
+    for ( i=0; i<3;i++){
         
-        highscore_text[9+i+poss*16]= buffer[i];
+        text[9+i+poss*16]= buffer[i];
     }
 }
 
 
-char new_highscore(score){
-    for(int i = 0; i<4;i++){
+char new_highscore(char text[],int score){
+    int i;
+    int j;
+    for( i = 0; i<4;i++){
         int sum=0;
-        for(int j=0; j<3;j++){
-            sum +=highscore_text[9+j+i*16]-'0';
+        for(j=0; j<3;j++){
+            sum +=text[9+j+i*16]-'0';
         }
         if (score>sum){
-
-            char highscore_new[]=highscore_swap(score,i);
+            highscore_swap(text,score,i);
             score = sum;
             return ;
         }
@@ -41,7 +42,7 @@ char new_highscore(score){
 }
 
 
-void gameover(int score,int oppownent){
+void gameover(char text[],int score,int oppownent){
     if(oppownent>0){
         if(score<oppownent){
             display_string(0,">   Game over                       YOU LOSE               ");
@@ -62,6 +63,6 @@ void gameover(int score,int oppownent){
     }
 
     //click ok
-    char new_scores[66]=new_highscore(score);
+    char new_scores[66]=new_highscore(text,score);
     // gå till main screen
 }

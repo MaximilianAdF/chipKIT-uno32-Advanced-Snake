@@ -17,7 +17,7 @@ int ai = 0;
 char text[]="     Snake      >    start           modes         highscore    ";
 char main_text[]="     Snake      >    start           modes         highscore    ";
 char mode_text[]=">  DIFFICULTY        APPELS          WALLS          1 vs AI    ";
-char highscore_text[]=">    ___:---         ___:---         ___:---         ___:---     ";
+char highscore_text;
 char dificulty_text[]="   Dificulty           V               5               ^     "; 
 char apple_text[]="     Apple             V               1               ^     ";
 char wall_text[]="     Walls?                     >     off             on  ";
@@ -83,7 +83,7 @@ swap_text(char new_text[]){// swaps the current text with disierd text
     
 }
 
-click(input){
+click(char input,char text[]){
     if(input=='r'){
         if(current_menu==0){ // checks if in start menu
             if (current==1){
@@ -95,7 +95,7 @@ click(input){
             }else if (current==3){
             //highscore_display
                 current_menu=2;
-                swap_text(highscore_text);
+                swap_text(text);
             }
         }
         else if (current_menu==1){// checks if in modes menu
@@ -179,7 +179,7 @@ click(input){
     }
 }
 
-int menu(int *a, int *b, int *c, int *d){
+int menu(int *a, int *b, int *c, int *d, char highscore){
 
     char input=0;
 
@@ -192,7 +192,7 @@ int menu(int *a, int *b, int *c, int *d){
             input=0;
             quicksleep(1000000);
         }else if (input!=0){
-            click(input);
+            click(input,highscore);
             input=0;
             quicksleep(1000000);
         }

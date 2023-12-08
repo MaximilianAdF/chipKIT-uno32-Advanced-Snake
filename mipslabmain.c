@@ -56,12 +56,14 @@ int main(void) {
 	SPI2CONSET = 0x20;
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
-	
+	char highscore_text;
+	highscore_text="     ___:---         ___:---         ___:---         ___:---     ";
+
 	display_init();
 
 	int num1,num2,num3,num4;
 	while(1){
-	menu(&num1, &num2, &num3, &num4);
+	menu(&num1, &num2, &num3, &num4,highscore_text);
 
 	game_init(num1, num2, num3, num4);
 
@@ -69,9 +71,9 @@ int main(void) {
 	char dead=0;
 		while( dead==0 )
 		{
-	  		labwork(); /* Do lab-specific things again and again */
+	  		dead=labwork(dead); /* Do lab-specific things again and again */
 		}
-		//gameover();
+		highscore_text=gameover(highscore_text,1,0);
 	}
 	return 0;
 }
