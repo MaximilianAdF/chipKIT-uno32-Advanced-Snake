@@ -69,11 +69,27 @@ char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
         if (wallInfinite == 1) {
             int appleX = apple_pos[i]%128;
             int appleY = apple_pos[i]/128;
+            
+            int diffX = AIheadX - appleX;
+            int diffY = AIheadY - appleY;
+
+            if ((diffX > 64 && AI_vektor != 'l') || diffX < 64) { // Faster to travel through wall unless already traveling in that direction
+
+            }
+
+
+
         } else {
             //Calculate distance between player head and apple (wallInfinite = 0)
-            int totalDiffPlayer = abs(player_head - apple_pos[i]);
+            int totalDiffPlayer = player_head - apple_pos[i];
             //Calculate distance between AI head and apple (wallInfinite = 0)
-            int totalDiffAI = abs(AI_head - apple_pos[i]);        
+            int totalDiffAI = AI_head - apple_pos[i];    
+            if (totalDiffAI < 0) {
+                totalDiffAI = -totalDiffAI;
+            }
+            if (totalDiffPlayer < 0) {
+                totalDiffPlayer = -totalDiffPlayer;
+            }  
 
             if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
                 currApple = apple_pos[i];
