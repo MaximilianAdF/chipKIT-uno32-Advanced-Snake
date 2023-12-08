@@ -45,6 +45,7 @@ char get_direction(int head, int final_pos, int vektor) {
     } else if (headY > finalY && vektor != 'u' && safeMoves[3] == 'd') {
         return 'd';
     }
+    return vektor;
 }
 
 
