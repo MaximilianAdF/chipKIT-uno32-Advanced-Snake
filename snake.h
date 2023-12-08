@@ -46,14 +46,14 @@ int player_front = -1, player_rear = -1;
 char player_prev_movm[SIZE];
 int currScore = 0;
 
-int player_head = 128 * 14 + 6; // Player snake head  
+int player_head = 128 * 14 + 6; // Player snake pos  
 int player_end = 128 * 14 + 2;  // Player snake tail
 char player_vektor = 'r';       // r = right, l = left, u = up, d = down
 
 int ai_front = -1, ai_rear = -1;
 char ai_prev_movm[SIZE];
 
-int AI_head = 128 * 15 - 8;      //AI snake head
+int AI_head = 128 * 15 - 8;      //AI snake pos
 int AI_end = 128 * 15 - 4;       //AI snake tail
 char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
@@ -81,18 +81,18 @@ int pop(char arr[], int *front, int *rear) {
     return poppedElem;
 }
 
-void init_snake(int head) {
+void init_snake(int pos) {
     int i = 0;
     for (i; i < 6; i++) {
-        bitmap[head+i] = 1;
-        bitmap[head+i+128] = 1;
+        bitmap[pos+i] = 1;
+        bitmap[pos+i+128] = 1;
     }
 }
 
 int create_apple(int TMR2copy) {
     int appleX = ((TMR2copy % 61) + 1)*2;  // Ensures appleX is >= 3, odd, and < 127
     int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
-
+ 
     if (bitmap[appleX+appleY*128] != 0 || bitmap[appleX+appleY*128+1] != 0 || bitmap[appleX+appleY*128+128] != 0 || bitmap[appleX+appleY*128+1+128] != 0) {
         return 0;
     } else {
@@ -129,9 +129,9 @@ void generate_walls(){
 }
 
 
-int check_obstacle(int *head, char *vektor){
-    int headX = *head%128;
-    int headY = *head/128;
+int check_obstacle(int *pos, char *vektor){
+    int headX = *pos%128;
+    int headY = *pos/128;
     if (*vektor == 'r') {
         if (bitmap[headY*128 + (headX+2)%128] == 1 || bitmap[headY*128 + (headX+2)%128] == 2 || bitmap[headY*128 + (headX+2)%128] == 3) {
             // Game over
@@ -235,7 +235,7 @@ void movement_remove(int *end, int AI) {
     }
 }
 
-int movement(uint8_t button, int *head, int *end, char *vektor, int AI){
+int movement(uint8_t button, int *pos, int *end, char *vektor, int AI){
 
     if(button=='l' && *vektor != 'r'){
         *vektor = button;
@@ -250,7 +250,7 @@ int movement(uint8_t button, int *head, int *end, char *vektor, int AI){
         *vektor = button;
     }
     
-    int next_step = check_obstacle(head, vektor);
+    int next_step = check_obstacle(pos, vektor);
     
     if (next_step == 4) {
         currScore++;
@@ -269,28 +269,28 @@ int movement(uint8_t button, int *head, int *end, char *vektor, int AI){
     } else {
         push(*vektor, player_prev_movm, &player_front, &player_rear);
     }
-    int headX = *head%128;
-    int headY = *head/128;
+    int headX = *pos%128;
+    int headY = *pos/128;
     if (*vektor == 'l'){
         bitmap[headY*128 + (128+headX-1)%128]=1;
         bitmap[headY*128 + (128+headX-1)%128 + 128]=1;
-        *head=headY*128 + (128+headX-1)%128;
+        *pos=headY*128 + (128+headX-1)%128;
     }
     else if(*vektor == 'r'){
         bitmap[headY*128 + (headX+2)%128]=1;
         bitmap[headY*128 + (headX+2)%128 + 128]=1;
-        *head=headY*128 + (headX+1)%128;
+        *pos=headY*128 + (headX+1)%128;
     }
     else if(*vektor == 'd'){
         bitmap[((headY+2)%32)*128 + headX]=1;
         bitmap[((headY+2)%32)*128 + headX+1]=1;
-        *head=((headY+1)%32)*128 + headX;
+        *pos=((headY+1)%32)*128 + headX;
 
     }
     else if(*vektor == 'u'){
         bitmap[((headY+32-1)%32)*128 + headX]=1;
         bitmap[((headY+32-1)%32)*128 + headX+1]=1;
-        *head=((headY+32-1)%32)*128 + headX;
+        *pos=((headY+32-1)%32)*128 + headX;
     }
     return 0;
 }

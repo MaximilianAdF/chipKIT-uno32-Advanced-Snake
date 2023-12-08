@@ -30,27 +30,6 @@ char* get_safe_moves(int head) {
     return temp;
 }
 
-char get_direction(int head, int final_pos, int vektor) {
-    //Add wallInfinite = 1 or 0 functionality
-    int headX = head%128;
-    int headY = head/128;
-    int finalX = final_pos%128;
-    int finalY = final_pos/128;
-
-    char* safeMoves = get_safe_moves(head);
-    if (headX < finalX && vektor != 'l' && safeMoves[0] == 'r') {
-        return 'r';
-    } else if (headX > finalX && vektor != 'r' && safeMoves[1] == 'l') {
-        return 'l';
-    } else if (headY < finalY && vektor != 'd' && safeMoves[2] == 'u') {
-        return 'u';
-    } else if (headY > finalY && vektor != 'u' && safeMoves[3] == 'd') {
-        return 'd';
-    }
-    return go_center(head, vektor);
-}
-
-
 char go_center(int head, char vektor) {
     //When apple is further away from AI than player, go towards center of board (coords 2048)
     int centerX = 64;
@@ -108,6 +87,26 @@ char go_center(int head, char vektor) {
             return 'u';
         }
     }
+}
+
+char get_direction(int head, int final_pos, int vektor) {
+    //Add wallInfinite = 1 or 0 functionality
+    int headX = head%128;
+    int headY = head/128;
+    int finalX = final_pos%128;
+    int finalY = final_pos/128;
+
+    char* safeMoves = get_safe_moves(head);
+    if (headX < finalX && vektor != 'l' && safeMoves[0] == 'r') {
+        return 'r';
+    } else if (headX > finalX && vektor != 'r' && safeMoves[1] == 'l') {
+        return 'l';
+    } else if (headY < finalY && vektor != 'd' && safeMoves[2] == 'u') {
+        return 'u';
+    } else if (headY > finalY && vektor != 'u' && safeMoves[3] == 'd') {
+        return 'd';
+    }
+    return go_center(head, vektor);
 }
 
 char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
