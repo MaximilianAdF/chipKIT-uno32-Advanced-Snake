@@ -105,6 +105,7 @@ void game_init(int speed, int apples, int walls, int ai,int *game){
     AI = ai;
     
     snakeSpeed = speed;
+    wallInfinite = walls;
 
     init_snake(player_end); //Create the player's snake
     if (walls==1){
