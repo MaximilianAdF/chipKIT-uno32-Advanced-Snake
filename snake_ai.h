@@ -259,7 +259,7 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     return vektor; //If no other option, continue in same direction (Most likely dead)
 }
 
-int min_dist(int head, int final_pos) {
+int min_dist(int head, int final_pos, int wallInfinite) {
     //wallInfinite = 1 or 0 functionality, finds the shortest distance between two points on the board
     int headX = head%128;
     int headY = head/128;
@@ -275,11 +275,13 @@ int min_dist(int head, int final_pos) {
         diffY = -diffY;
     }
 
-    if (diffX > 64) {
-        diffX = 128 - diffX;
-    }
-    if (diffY > 16) {
-        diffY = 32 - diffY;
+    if (wallInfinite == 1) {
+        if (diffX > 64) {
+            diffX = 128 - diffX;
+        }
+        if (diffY > 16) {
+            diffY = 32 - diffY;
+        }
     }
 
     return diffX + diffY;
@@ -302,9 +304,9 @@ char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
         }
 
         //Calculate distance between player head and apple (wallInfinite = 0,1)
-        totalDiffPlayer = min_dist(player_head, apple_pos[i]);
+        totalDiffPlayer = min_dist(player_head, apple_pos[i], wallInfinite);
         //Calculate distance between AI head and apple (wallInfinite = 0,1)
-        totalDiffAI = min_dist(AI_head, apple_pos[i]);  
+        totalDiffAI = min_dist(AI_head, apple_pos[i], wallInfinite);  
 
         if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
             currApple = apple_pos[i];
