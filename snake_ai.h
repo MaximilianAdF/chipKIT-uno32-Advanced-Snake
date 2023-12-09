@@ -111,6 +111,9 @@ char get_direction(int head, int final_pos, int vektor) {
                 return vektor;
             }
         }
+        if (vektor != 'l' && safeMoves[0] == 'r') { // If not travelling left and can go right, go right
+            return 'r';
+        }
     }
     
     //If AI's X coordinate is larger than the apple's X coordinate => (AI is to the right of the apple, needs to go left)
@@ -126,6 +129,9 @@ char get_direction(int head, int final_pos, int vektor) {
             } else { // No option but to continue going right
                 return vektor;
             }
+        }
+        if (vektor != 'r' && safeMoves[1] == 'l') { // If not travelling right and can go left, go left
+            return 'l';
         }
     }
 
@@ -143,6 +149,9 @@ char get_direction(int head, int final_pos, int vektor) {
                 return vektor;
             }
         }
+        if (vektor != 'u' && safeMoves[3] == 'd') { // If not travelling up and can go down, go down
+            return 'd';
+        }
     }
 
     //If AI's Y coordinate is larger than the apple's Y coordinate => (AI is below the apple, needs to go up)
@@ -158,6 +167,9 @@ char get_direction(int head, int final_pos, int vektor) {
             } else { // No option but to continue going down
                 return vektor;
             }
+        }
+        if (vektor != 'd' && safeMoves[2] == 'u') { // If not travelling down and can go up, go up
+            return 'u';
         }
     }
 
