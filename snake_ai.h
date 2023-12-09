@@ -89,20 +89,100 @@ char go_center(int head, char vektor) {
     }
 }
 
-char get_direction(int head, int final_pos, int vektor) {
+char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     //Add wallInfinite = 1 or 0 functionality
-    int headX = head%128;
-    int headY = head/128;
     int finalX = final_pos%128;
     int finalY = final_pos/128;
+    int headX = head%128;
+    int headY = head/128;
+    int distX = headX - finalX;
+    int distY = headY - finalY;
 
     char* safeMoves = get_safe_moves(head); //r, l, u, d
+    if (wallInfinite == 1) {
+        //distX > 64 => (headX > finalX meaning AI is to the right and need to travel through right wall since distance is larger than half the board)
+        if (distX > 64) { 
+            if (vektor == 'r' && safeMoves[0] == 'r') { // If already travelling to right, continue.
+                return vektor;
+            }
+            if ((vektor == 'l' || vektor == 'r') && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+                if (safeMoves[2] == 'u') {
+                    return 'u';
+                } else if (safeMoves[3] == 'd') {
+                    return 'd';
+                } else { // No option but to continue going left/right
+                    return vektor;
+                }
+            }
+            if (vektor != 'l' && safeMoves[0] == 'r') { // If not travelling left and can go right, go right
+                return 'r';
+            }
+        }
+
+        //distX < -64 => (headX < finalX meaning AI is to the left and need to travel through left wall since distance is larger than half the board)
+        if (distX < -64) {
+            if (vektor == 'l' && safeMoves[1] == 'l') { // If already travelling to left, continue.
+                return vektor;
+            }
+            if ((vektor == 'r' || vektor == 'l') && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+                if (safeMoves[2] == 'u') {
+                    return 'u';
+                } else if (safeMoves[3] == 'd') {
+                    return 'd';
+                } else { // No option but to continue going left/right
+                    return vektor;
+                }
+            }
+            if (vektor != 'r' && safeMoves[1] == 'l') { // If not travelling right and can go left, go left
+                return 'l';
+            }
+        }
+
+        //distY > 16 => (headY > finalY meaning AI is below and need to travel through bottom wall since distance is larger than half the board)
+        if (distY > 16) {
+            if (vektor == 'd' && safeMoves[3] == 'd') { // If already travelling down, continue.
+                return vektor;
+            }
+            if ((vektor == 'u' || vektor == 'd') && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+                if (safeMoves[0] == 'r') {
+                    return 'r';
+                } else if (safeMoves[1] == 'l') {
+                    return 'l';
+                } else { // No option but to continue going up/down
+                    return vektor;
+                }
+            }
+            if (vektor != 'u' && safeMoves[3] == 'd') { // If not travelling up and can go down, go down
+                return 'd';
+            }
+        }
+
+        //distY < -16 => (headY < finalY meaning AI is above and need to travel through top wall since distance is larger than half the board)
+        if (distY < -16) {
+            if (vektor == 'u' && safeMoves[2] == 'u') { // If already travelling up, continue.
+                return vektor;
+            }
+            if ((vektor == 'd' || vektor == 'd') && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+                if (safeMoves[0] == 'r') {
+                    return 'r';
+                } else if (safeMoves[1] == 'l') {
+                    return 'l';
+                } else { // No option but to continue going up/down
+                    return vektor;
+                }
+            }
+            if (vektor != 'd' && safeMoves[2] == 'u') { // If not travelling down and can go up, go up
+                return 'u';
+            }
+        }
+    }
+
     //If AI's X coordinate is smaller than the apple's X coordinate => (AI is to the left of the apple, needs to go right)
     if (headX < finalX) {
         if (vektor == 'r' && safeMoves[0] == 'r') { // If already travelling to right, continue.
             return vektor;
         }
-        if (vektor == 'l' && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+        if ((vektor == 'l' || vektor == 'r') && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
             if (safeMoves[2] == 'u') {
                 return 'u';
             } else if (safeMoves[3] == 'd') {
@@ -121,7 +201,7 @@ char get_direction(int head, int final_pos, int vektor) {
         if (vektor == 'l' && safeMoves[1] == 'l') { // If already travelling to left, continue.
             return vektor;
         }
-        if (vektor == 'r' && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+        if ((vektor == 'r' || vektor == 'l') && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
             if (safeMoves[2] == 'u') {
                 return 'u';
             } else if (safeMoves[3] == 'd') {
@@ -140,7 +220,7 @@ char get_direction(int head, int final_pos, int vektor) {
         if (vektor == 'd' && safeMoves[3] == 'd') { // If already travelling down, continue.
             return vektor;
         }
-        if (vektor == 'u' && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+        if ((vektor == 'u' || vektor == 'd') && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
             if (safeMoves[0] == 'r') {
                 return 'r';
             } else if (safeMoves[1] == 'l') {
@@ -159,7 +239,7 @@ char get_direction(int head, int final_pos, int vektor) {
         if (vektor == 'u' && safeMoves[2] == 'u') { // If already travelling up, continue.
             return vektor;
         }
-        if (vektor == 'd' && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+        if ((vektor == 'd' || vektor == 'd') && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
             if (safeMoves[0] == 'r') {
                 return 'r';
             } else if (safeMoves[1] == 'l') {
@@ -178,6 +258,7 @@ char get_direction(int head, int final_pos, int vektor) {
     }
     return vektor; //If no other option, continue in same direction (Most likely dead)
 }
+
 int min_dist(int head, int final_pos) {
     //wallInfinite = 1 or 0 functionality, finds the shortest distance between two points on the board
     int headX = head%128;
@@ -204,7 +285,7 @@ int min_dist(int head, int final_pos) {
     return diffX + diffY;
 }
 
-char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
+char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
     //Add wallInfinite = 1 or 0 functionality
     int totalDiffPlayer;
     int totalDiffAI;
@@ -232,7 +313,7 @@ char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
         }
     }
     if (flag == 1) {
-        return get_direction(AI_head, currApple, AI_vektor);
+        return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
     }
     return go_center(AI_head, AI_vektor);
 }
