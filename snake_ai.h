@@ -15,16 +15,16 @@ int flag = 0; //Flag to check if we have found an apple that is closer to the AI
 
 char* get_safe_moves(int head) {
     char temp[4] = {'0', '0', '0', '0'};
-    if (bitmap[head+2] == 0) {
+    if (bitmap[head+2] != 1) {
         temp[0] = 'r';
     }
-    if (bitmap[head-1] == 0) {
+    if (bitmap[head-1] != 1) {
         temp[1] = 'l';
     }
-    if (bitmap[head-128] == 0) {
+    if (bitmap[head-128] != 1) {
         temp[2] = 'u';
     }
-    if (bitmap[head+2*128] == 0) {
+    if (bitmap[head+2*128] != 1) {
         temp[3] = 'd';
     }
     return temp;
@@ -314,6 +314,9 @@ char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
             flag = 1;
         }
     }
-    return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
+    if (flag == 1) {
+        return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
+    }
+    return go_center(AI_head, AI_vektor);
 }
 
