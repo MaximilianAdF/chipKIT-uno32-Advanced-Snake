@@ -12,17 +12,62 @@ int apples = 1;
 int number = 5;
 int walls = 1;
 int ai = 0;
+int poss=0;
 
 /* test files difficulty*/
 char text[]="     Snake      >    start           modes         highscore    ";
 char main_text[]="     Snake      >    start           modes         highscore    ";
 char mode_text[]=">  DIFFICULTY        APPELS          WALLS          1 vs AI    ";
-char highscore_text;
+char highscore_text[]="     ___:000         ___:000         ___:000         ___:999    ";
 char dificulty_text[]="   Dificulty           V               5               ^     "; 
 char apple_text[]="     Apple             V               1               ^     ";
 char wall_text[]="     Walls?                     >     off             on  ";
 char ai_text[]="   YOU vs AI?                   >      off             on  ";
+char new_highscore_text[]=" New Highscore       V               AAA:___         ^         ";
 
+char new_highscore(int score){
+    int i,j;
+    for( i = 0; i<4;i++){
+        int p=0;
+        int sum=0;
+        for(j=0; j<3;j++){
+            sum +=highscore_text[9+j+i*16]-'0';
+        }
+        if (score>sum){
+            while (p<3) {
+            int digit = score % 10;
+            new_highscore_text[43-p] = digit + '0'; // Convert digit to character
+            p++;
+            score /= 10;
+            }
+            poss=i;
+
+            swap_text(new_highscore_text);
+            current_menu=11;
+            number=0;
+            return;
+        }
+    }
+    //ominte ett nytt highscore
+    current_menu=0;
+    swap_text(main_text);
+    current=1;
+}
+
+
+char gameover(int score,int opponent){
+    if(opponent>0){
+        if(score<opponent){
+            swap_text("    Game over                       YOU LOSE               ");
+        }
+        else{
+            swap_text("    Game over                       YOU WIN               ");
+        }
+    }else{
+    swap_text("    Game over                                        ");
+    }
+    current_menu=10;
+}
 
 swap_funk(input, min){
         if(input=='d'){
@@ -63,6 +108,21 @@ void swap(input){ // moves arrow upp or down
     }
     else if(current_menu==5||current_menu==6){ //on / off menue
         swap_funk(input,2);
+
+    }else if(current_menu==11){
+        if(input=='d'){
+            if(number>0){
+                number--;
+                text[37+poss+current]=number + 'A';
+            }
+        }
+        if (input=='u'){
+            if (number<25){
+                number++;
+                text[37+poss+current]=number+ 'A';
+            }
+        }
+
     }
 
     else{ // if not a unik menu
@@ -83,8 +143,11 @@ swap_text(char new_text[]){// swaps the current text with disierd text
     
 }
 
-click(char input,char text[]){
-    if(input=='r'){
+click(char input,int score){
+    if(current_menu==10){
+        new_highscore(score);
+
+    }else if(input=='r'){
         if(current_menu==0){ // checks if in start menu
             if (current==1){
                 starter='1';
@@ -95,7 +158,7 @@ click(char input,char text[]){
             }else if (current==3){
             //highscore_display
                 current_menu=2;
-                swap_text(text);
+                swap_text(highscore_text);
             }
         }
         else if (current_menu==1){// checks if in modes menu
@@ -160,9 +223,34 @@ click(char input,char text[]){
             current=1;
 
         }
-
-
-
+        if(current_menu==11){
+            if(current==2){ //save and go to main menu
+                char old_score[7];
+                while(poss<4){
+                    int i ;
+                    for (i=0 ; i<7;i++){
+                        old_score[i]=highscore_text[5+(poss*16)+i];
+                        highscore_text[5+(poss*16)+i]=text[37+i];
+                        text[37+i]=old_score[i];
+                        }
+                    poss++;
+                    }
+                current_menu=0;
+                swap_text(main_text);
+                current=1;
+  
+            }else{
+                text[37+current]=number+'A';
+                text[21+current]=' ';
+                text[53+current]=' ';
+                text[22+current]='V';
+                text[54+current]='^';
+                current++;
+                number=0;
+                display_string(0,text);
+                display_update();
+            }
+        }
 
 
     }else{ //back
@@ -179,12 +267,20 @@ click(char input,char text[]){
     }
 }
 
-int menu(int *a, int *b, int *c, int *d, char highscore){
 
+int menu(int *a, int *b, int *c, int *d, int score, char game){
+    int temp=0;
     char input=0;
-
+    if(game!=0){ // om ett spel har körts
+        gameover(score,temp);
+        game=0;
+    }else{
     display_string(0,text);
 	display_update();
+    }
+    
+
+
     while(starter=='0'){
         input=getbtns(input);
         if (input=='u'|| input=='d'){
@@ -192,11 +288,12 @@ int menu(int *a, int *b, int *c, int *d, char highscore){
             input=0;
             quicksleep(1000000);
         }else if (input!=0){
-            click(input,highscore);
+            click(input,score);
             input=0;
             quicksleep(1000000);
         }
     }
+    starter='0';
     *a = snakespeed;
     *b = apples;
     *c = walls;

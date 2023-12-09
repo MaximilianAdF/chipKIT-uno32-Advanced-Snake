@@ -55,5 +55,5 @@ void delay(int);
 char getbtns(char);
 int getsw(void);
 void enable_interrupt(void);
-
+void disable_interrupt(void);
 

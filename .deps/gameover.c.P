@@ -1,26 +1,20 @@
-gameover.c.o: gameover.c \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/stdio.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/klibc/extern.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/klibc/inline.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdarg.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stddef.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/string.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/stdlib.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdbool.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/math.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/machine/ieeefp.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/stdint.h \
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdint-gcc.h
-gameover.c :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/stdio.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/klibc/extern.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/klibc/inline.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdarg.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stddef.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/string.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/stdlib.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdbool.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/math.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/machine/ieeefp.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/include/stdint.h :
- /Applications/mcb32tools.app/Contents/Resources/Toolchain/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdint-gcc.h :
+gameover.c.o: gameover.c /opt/mcb32tools/include/stdio.h \
+ /opt/mcb32tools/include/klibc/extern.h \
+ /opt/mcb32tools/include/klibc/inline.h \
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdarg.h \
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stddef.h \
+ /opt/mcb32tools/include/string.h /opt/mcb32tools/include/stdlib.h \
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdbool.h \
+ /opt/mcb32tools/include/math.h /opt/mcb32tools/include/machine/ieeefp.h \
+ /opt/mcb32tools/include/stdint.h \
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdint-gcc.h
+gameover.c /opt/mcb32tools/include/stdio.h :
+ /opt/mcb32tools/include/klibc/extern.h :
+ /opt/mcb32tools/include/klibc/inline.h :
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdarg.h :
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stddef.h :
+ /opt/mcb32tools/include/string.h /opt/mcb32tools/include/stdlib.h :
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdbool.h :
+ /opt/mcb32tools/include/math.h /opt/mcb32tools/include/machine/ieeefp.h :
+ /opt/mcb32tools/include/stdint.h :
+ /opt/mcb32tools/lib/gcc/mipsel-mcb32-elf/4.9.2/include/stdint-gcc.h :

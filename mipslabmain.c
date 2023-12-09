@@ -56,24 +56,28 @@ int main(void) {
 	SPI2CONSET = 0x20;
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
-	char highscore_text;
-	highscore_text="     ___:---         ___:---         ___:---         ___:---     ";
+
 
 	display_init();
 
 	int num1,num2,num3,num4;
+	int game = 0;
+	int score = 0;
+
 	while(1){
-	menu(&num1, &num2, &num3, &num4,highscore_text);
+		menu(&num1, &num2, &num3, &num4,score,game);
 
-	game_init(num1, num2, num3, num4);
-
-	labinit(); /* Do any lab-specific initialization */
-	char dead=0;
-		while( dead==0 )
-		{
-	  		dead=labwork(dead); /* Do lab-specific things again and again */
-		}
-		highscore_text=gameover(highscore_text,1,0);
-	}
+		game_init(num1, num2, num3, num4,&game);
+		score = 0;
+		labinit(); /* Do any lab-specific initialization */
+		
+		char dead=0;
+			while( dead==0 )
+			{
+				dead=labwork(&score); /* Do lab-specific things again and again */
+			}
+		
+		disable_interrupt();
+		}	
 	return 0;
 }
