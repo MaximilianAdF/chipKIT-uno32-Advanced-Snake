@@ -178,13 +178,37 @@ char get_direction(int head, int final_pos, int vektor) {
     }
     return vektor; //If no other option, continue in same direction (Most likely dead)
 }
+int min_dist(int head, int final_pos) {
+    //wallInfinite = 1 or 0 functionality, finds the shortest distance between two points on the board
+    int headX = head%128;
+    int headY = head/128;
+    int finalX = final_pos%128;
+    int finalY = final_pos/128;
+
+    int diffX = headX - finalX;
+    if (diffX < 0) {
+        diffX = -diffX;
+    }
+    int diffY = headY - finalY;
+    if (diffY < 0) {
+        diffY = -diffY;
+    }
+
+    if (diffX > 64) {
+        diffX = 128 - diffX;
+    }
+    if (diffY > 16) {
+        diffY = 32 - diffY;
+    }
+
+    return diffX + diffY;
+}
 
 char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
     //Add wallInfinite = 1 or 0 functionality
-    int AIheadX = AI_head%128;
-    int AIheadY = AI_head/128;
-    int playerHeadX = player_head%128;
-    int playerHeadY = player_head/128;
+    int totalDiffPlayer;
+    int totalDiffAI;
+
 
     int i = 0;
     for (i; i < appleCount; i++) {
@@ -195,40 +219,16 @@ char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
             minDist = 4096;
             flag = 0;
         }
-        if (wallInfinite == 1) {
-            int appleX = apple_pos[i]%128;
-            int appleY = apple_pos[i]/128;
-            
-            int diffX = AIheadX - appleX;
-            int diffY = AIheadY - appleY;
 
-            if (diffX > 66 || diffX < 66) { // Faster to travel through wall if distance is greater than 66 since then we have time to turn and still have less distance
+        //Calculate distance between player head and apple (wallInfinite = 0,1)
+        totalDiffPlayer = min_dist(player_head, apple_pos[i]);
+        //Calculate distance between AI head and apple (wallInfinite = 0,1)
+        totalDiffAI = min_dist(AI_head, apple_pos[i]);  
 
-            }
-            if (diffY > 18 || diffY < 18) { // Faster to travel through wall if distance is greater than 18 since then we have time to turn and still have less distance
-
-            }
-
-
-
-        } else {
-            //Calculate distance between player head and apple (wallInfinite = 0)
-            int totalDiffPlayer = player_head - apple_pos[i];
-            if (totalDiffPlayer < 0) {
-                totalDiffPlayer = -totalDiffPlayer;
-            }  
-            //Calculate distance between AI head and apple (wallInfinite = 0)
-            int totalDiffAI = AI_head - apple_pos[i];    
-            if (totalDiffAI < 0) {
-                totalDiffAI = -totalDiffAI;
-            }
-
-
-            if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
-                currApple = apple_pos[i];
-                minDist = totalDiffAI;
-                flag = 1;
-            }
+        if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
+            currApple = apple_pos[i];
+            minDist = totalDiffAI;
+            flag = 1;
         }
     }
     if (flag == 1) {
