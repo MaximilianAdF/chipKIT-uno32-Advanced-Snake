@@ -18,7 +18,7 @@
 #include <stdlib.h>
 
 int AI;
-int wallInfinite;   // 1 = Infinite wall, 0 = Walls on
+int wallInfinite;   // 0 = Infinite wall, 1 = Walls on
 int snakeSpeed;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 
 int timeoutcount=0;
@@ -47,7 +47,7 @@ char getbtns(char btn){
 
 /* Interrupt Service Routine */
 void user_isr( void ) {
-    if (IFS(0) & 0x0100 && player_dead!=1 && AI_dead!=1) {
+    if (IFS(0) & 0x0100 && player_dead!=1) {
         char dir = init_ai(AI_head, AI_vektor, wallInfinite); 
         if(timeoutcount==(6-snakeSpeed)){
             player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);

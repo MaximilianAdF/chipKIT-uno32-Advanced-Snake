@@ -101,7 +101,7 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     int distY = headY - finalY;
 
     char* safeMoves = get_safe_moves(head); //r, l, u, d
-    if (wallInfinite == 1) {
+    if (wallInfinite == 0) {
         //distX > 64 => (headX > finalX meaning AI is to the right and need to travel through right wall since distance is larger than half the board)
         if (distX > 64) { 
             if (vektor == 'r' && safeMoves[0] == 'r') { // If already travelling to right, continue.
@@ -277,7 +277,7 @@ int min_dist(int head, int final_pos, int wallInfinite) {
         diffY = -diffY;
     }
 
-    if (wallInfinite == 1) {
+    if (wallInfinite == 0) {
         if (diffX > 64) {
             diffX = 128 - diffX;
         }
