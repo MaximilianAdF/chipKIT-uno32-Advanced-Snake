@@ -15,7 +15,7 @@ uint8_t spi_send_recv(uint8_t data);
 
 /* Declare lab-related functions from mipslabfunc.c */
 char * itoaconv( int num );
-void labwork(void);
+int labwork();
 void quicksleep(int cyc);
 void tick( unsigned int * timep );
 
@@ -55,5 +55,5 @@ void delay(int);
 char getbtns(char);
 int getsw(void);
 void enable_interrupt(void);
-
+void disable_interrupt(void);
 

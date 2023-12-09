@@ -72,8 +72,6 @@ void user_isr( void ) {
         TMR2 = 0;//Set T2IF to 0 - Clear T2 Int. flag.
         timeoutcount++;
     }
-
-
     return;
 }
 
@@ -90,7 +88,7 @@ void labinit( void )
     PR2 = 6250;
     TMR2 = 0;
   
-    IFS(0) =0;
+    IFS(0) = 0;
     IEC(0) = 0x0100; //Timer 2 interrupt enable T2IE
     IPC(2) |= 0x1F; //T2IP
     IPC(2) |= 0x1C0;
@@ -102,7 +100,7 @@ void labinit( void )
     return;
 }
 
-void game_init(int speed, int apples, int walls, int ai){
+void game_init(int speed, int apples, int walls, int ai,int *game){
     last_apple = -apples;
     appleCount = apples;
     appleCC = apples;
@@ -128,10 +126,12 @@ void game_init(int speed, int apples, int walls, int ai){
     }
     player_dead=0;
     AI_dead=0;
+    *game = 1;
 }
 
+
 /* This function is called repetitively from the main program */
-void labwork( void ) {
+int labwork(int *score) {
     volatile uint32_t *PORTE_ptr = (volatile uint32_t*)0xbf886110; //Define leds
     *PORTE_ptr = currScore; //Update the leds with score
 
@@ -141,5 +141,8 @@ void labwork( void ) {
     }
     btn = getbtns(btn);
     display_bit_update();
+    *score=currScore;
+
+    return player_dead;
 }
 
