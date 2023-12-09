@@ -9,12 +9,12 @@
 // Needs to run 24/7 so that it can react to player movement, runs independently of apple_proximity.
 // Add a flag to apple_proximity so that we don't add unnecessary "safe movements" when we have a path to an apple.
 
-int currApple; //The position of the apple that the AI is currently going for
+int currApple = 2048; //The position of the apple that the AI is currently going for
 int minDist = 4096; //The distance between the AI head and the apple that the AI is currently going for
 int flag = 0; //Flag to check if we have found an apple that is closer to the AI than the player
 
 char* get_safe_moves(int head) {
-    char temp[4] = {'0', '0', '0', '0'};
+    static char temp[4] = {'0', '0', '0', '0'};
     if (bitmap[head+2] != 1) {
         temp[0] = 'r';
     }
@@ -310,15 +310,17 @@ char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
         //Calculate distance between AI head and apple (wallInfinite = 0,1)
         totalDiffAI = min_dist(AI_head, apple_pos[i], wallInfinite);  
 
-        if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
+        //if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
+        if (totalDiffAI < minDist) {
             currApple = apple_pos[i];
             minDist = totalDiffAI;
             flag = 1;
         }
     }
-    if (flag == 1) {
-        return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
-    }
-    return go_center(AI_head, AI_vektor);
+    return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
+    //if (flag == 1) {
+        //return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
+    //}
+    //return go_center(AI_head, AI_vektor);
 }
 
