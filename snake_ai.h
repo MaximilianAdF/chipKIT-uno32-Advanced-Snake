@@ -314,9 +314,6 @@ char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
             flag = 1;
         }
     }
-    if (flag == 1) {
-        return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
-    }
-    return go_center(AI_head, AI_vektor);
+    return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
 }
 
