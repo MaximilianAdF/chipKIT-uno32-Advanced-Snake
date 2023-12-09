@@ -17,11 +17,6 @@
 #include "snake_ai.h"
 #include <stdlib.h>
 
-
-int prime = 1234567;    
-int mytime = 0x5957;
-char textstring[] = "text, more text, and even more text!";
-
 int AI;
 int wallInfinite;   // 1 = Infinite wall, 0 = Walls on
 int snakeSpeed;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
@@ -101,6 +96,7 @@ void labinit( void )
 }
 
 void game_init(int speed, int apples, int walls, int ai,int *game){
+    
     last_apple = -apples;
     appleCount = apples;
     appleCC = apples;
@@ -127,6 +123,42 @@ void game_init(int speed, int apples, int walls, int ai,int *game){
     player_dead=0;
     AI_dead=0;
     *game = 1;
+}
+/*needs to reset everyting so the game can be played multiple times*/
+void game_reset(){
+    int i;
+    //bitmap
+    for(i=0;i<4096;i++){
+        bitmap[i]='\0';
+    }
+    //score
+    currScore=0;
+    //player_prev_movm
+    for(i=0;i<SIZE;i++){
+        player_prev_movm[i]='\0';
+        ai_prev_movm[i]='\0';
+    }
+    //ai_prev_movm
+    for (i=0;i<5;i++){
+    apple_pos[i] = 0;         // Array to store all the positions of the apples
+    }
+    player_front = -1, player_rear = -1; 
+
+    currScore = 0;
+
+    player_head = 128 * 14 + 6; // Player snake pos  
+    player_end = 128 * 14 + 2;  // Player snake tail
+    player_vektor = 'r';       // r = right, l = left, u = up, d = down
+
+    ai_front = -1, ai_rear = -1;
+
+    AI_head = 128 * 15 - 8;      //AI snake pos
+    AI_end = 128 * 15 - 4;       //AI snake tail
+    AI_vektor = 'l';
+
+
+    timeoutcount=0;
+    btn = 'r';
 }
 
 

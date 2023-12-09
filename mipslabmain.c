@@ -78,6 +78,7 @@ int main(void) {
 			}
 		
 		disable_interrupt();
+		game_reset();
 		}	
 	return 0;
 }
