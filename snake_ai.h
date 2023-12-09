@@ -31,48 +31,61 @@ char* get_safe_moves(int head) {
 }
 
 char go_center(int head, char vektor) {
-    //When apple is further away from AI than player, go towards center of board (coords 2048)
+    // Constants
     int centerX = 64;
     int centerY = 15;
 
-    int headX = head%128;
-    int headY = head/128;
+    // Head coordinates
+    int headX = head % 128;
+    int headY = head / 128;
 
+    // Get safe moves
     char* safeMoves = get_safe_moves(head);
-    if (headX < centerX) { //To the left of center
-        if (headY == centerY && vektor == 'l') {
+
+    // Logic to go towards the center
+    if (headX < centerX) { // To the left of center
+        if (headY == centerY) {
             if (safeMoves[2] == 'u') {
                 return 'u';
             } else if (safeMoves[3] == 'd') {
                 return 'd';
             }
         }
-    }
-    if (headX > centerX) { //To the right of center
-        if (headY == centerY && vektor == 'r') {
+        if (safeMoves[0] == 'r' && vektor != 'l') {
+            return 'r';
+        }
+    } else if (headX > centerX) { // To the right of center
+        if (headY == centerY) {
             if (safeMoves[2] == 'u') {
                 return 'u';
             } else if (safeMoves[3] == 'd') {
                 return 'd';
             }
         }
-    }
-    if (headY < centerY) { //Above center
-        if (headX == centerX && vektor == 'u') {
+        if (safeMoves[1] == 'l' && vektor != 'r') {
+            return 'l';
+        }
+    } else if (headY < centerY) { // Above center
+        if (headX == centerX) {
             if (safeMoves[0] == 'r') {
                 return 'r';
             } else if (safeMoves[1] == 'l') {
                 return 'l';
             }
         }
-    }
-    if (headY > centerY) { //Below center
-        if (headX == centerX && vektor == 'd') {
+        if (safeMoves[2] == 'u' && vektor != 'd') {
+            return 'u';
+        }
+    } else if (headY > centerY) { // Below center
+        if (headX == centerX) {
             if (safeMoves[0] == 'r') {
                 return 'r';
             } else if (safeMoves[1] == 'l') {
                 return 'l';
             }
+        }
+        if (safeMoves[3] == 'd' && vektor != 'u') {
+            return 'd';
         }
     }
     return vektor;
