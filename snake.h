@@ -253,7 +253,9 @@ int movement(uint8_t button, int *pos, int *end, char *vektor, int AI){
     int next_step = check_obstacle(pos, vektor);
     
     if (next_step == 4) {
-        currScore++;
+        if (AI != 1) {
+            currScore++;
+        }
         appleCC++;
     }
 

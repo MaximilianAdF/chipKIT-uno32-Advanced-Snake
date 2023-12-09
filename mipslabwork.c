@@ -142,15 +142,11 @@ void game_reset(){
     for (i=0;i<5;i++){
         apple_pos[i] = 0;         // Array to store all the positions of the apples
     }
-    player_front = -1, player_rear = -1; 
-
-    currScore = 0;
 
     player_head = 128 * 14 + 6; // Player snake pos  
     player_end = 128 * 14 + 2;  // Player snake tail
     player_vektor = 'r';       // r = right, l = left, u = up, d = down
 
-    ai_front = -1, ai_rear = -1;
 
     AI_head = 128 * 15 - 8;      //AI snake pos
     AI_end = 128 * 15 - 4;       //AI snake tail
