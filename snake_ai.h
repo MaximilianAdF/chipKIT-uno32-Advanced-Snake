@@ -47,9 +47,6 @@ char go_center(int head, char vektor) {
                 return 'd';
             }
         }
-        if (vektor != 'l') {
-            return 'r';
-        }
     }
     if (headX > centerX) { //To the right of center
         if (headY == centerY && vektor == 'r') {
@@ -58,9 +55,6 @@ char go_center(int head, char vektor) {
             } else if (safeMoves[3] == 'd') {
                 return 'd';
             }
-        }
-        if (vektor != 'r') {
-            return 'l';
         }
     }
     if (headY < centerY) { //Above center
@@ -71,9 +65,6 @@ char go_center(int head, char vektor) {
                 return 'l';
             }
         }
-        if (vektor != 'u') {
-            return 'd';
-        }
     }
     if (headY > centerY) { //Below center
         if (headX == centerX && vektor == 'd') {
@@ -83,10 +74,8 @@ char go_center(int head, char vektor) {
                 return 'l';
             }
         }
-        if (vektor != 'd') {
-            return 'u';
-        }
     }
+    return vektor;
 }
 
 char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
