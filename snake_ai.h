@@ -96,17 +96,75 @@ char get_direction(int head, int final_pos, int vektor) {
     int finalX = final_pos%128;
     int finalY = final_pos/128;
 
-    char* safeMoves = get_safe_moves(head);
-    if (headX < finalX && vektor != 'l' && safeMoves[0] == 'r') {
-        return 'r';
-    } else if (headX > finalX && vektor != 'r' && safeMoves[1] == 'l') {
-        return 'l';
-    } else if (headY < finalY && vektor != 'd' && safeMoves[2] == 'u') {
-        return 'u';
-    } else if (headY > finalY && vektor != 'u' && safeMoves[3] == 'd') {
-        return 'd';
+    char* safeMoves = get_safe_moves(head); //r, l, u, d
+    //If AI's X coordinate is smaller than the apple's X coordinate => (AI is to the left of the apple, needs to go right)
+    if (headX < finalX) {
+        if (vektor == 'r' && safeMoves[0] == 'r') { // If already travelling to right, continue.
+            return vektor;
+        }
+        if (vektor == 'l' && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+            if (safeMoves[2] == 'u') {
+                return 'u';
+            } else if (safeMoves[3] == 'd') {
+                return 'd';
+            } else { // No option but to continue going left
+                return vektor;
+            }
+        }
     }
-    return go_center(head, vektor);
+    
+    //If AI's X coordinate is larger than the apple's X coordinate => (AI is to the right of the apple, needs to go left)
+    if (headX > finalX) {
+        if (vektor == 'l' && safeMoves[1] == 'l') { // If already travelling to left, continue.
+            return vektor;
+        }
+        if (vektor == 'r' && headY == finalY) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+            if (safeMoves[2] == 'u') {
+                return 'u';
+            } else if (safeMoves[3] == 'd') {
+                return 'd';
+            } else { // No option but to continue going right
+                return vektor;
+            }
+        }
+    }
+
+    //If AI's Y coordinate is smaller than the apple's Y coordinate => (AI is above the apple, needs to go down)
+    if (headY < finalY) {
+        if (vektor == 'd' && safeMoves[3] == 'd') { // If already travelling down, continue.
+            return vektor;
+        }
+        if (vektor == 'u' && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+            if (safeMoves[0] == 'r') {
+                return 'r';
+            } else if (safeMoves[1] == 'l') {
+                return 'l';
+            } else { // No option but to continue going up
+                return vektor;
+            }
+        }
+    }
+
+    //If AI's Y coordinate is larger than the apple's Y coordinate => (AI is below the apple, needs to go up)
+    if (headY > finalY) {
+        if (vektor == 'u' && safeMoves[2] == 'u') { // If already travelling up, continue.
+            return vektor;
+        }
+        if (vektor == 'd' && headX == finalX) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+            if (safeMoves[0] == 'r') {
+                return 'r';
+            } else if (safeMoves[1] == 'l') {
+                return 'l';
+            } else { // No option but to continue going down
+                return vektor;
+            }
+        }
+    }
+
+    if (headX == finalX && headY == finalY) {
+        return go_center(head, vektor);
+    }
+    return vektor; //If no other option, continue in same direction (Most likely dead)
 }
 
 char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
@@ -144,14 +202,15 @@ char apple_proximity(int AI_head, char AI_vektor, int wallInfinite) {
         } else {
             //Calculate distance between player head and apple (wallInfinite = 0)
             int totalDiffPlayer = player_head - apple_pos[i];
+            if (totalDiffPlayer < 0) {
+                totalDiffPlayer = -totalDiffPlayer;
+            }  
             //Calculate distance between AI head and apple (wallInfinite = 0)
             int totalDiffAI = AI_head - apple_pos[i];    
             if (totalDiffAI < 0) {
                 totalDiffAI = -totalDiffAI;
             }
-            if (totalDiffPlayer < 0) {
-                totalDiffPlayer = -totalDiffPlayer;
-            }  
+
 
             if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
                 currApple = apple_pos[i];

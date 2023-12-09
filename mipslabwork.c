@@ -140,7 +140,7 @@ void game_reset(){
     }
     //ai_prev_movm
     for (i=0;i<5;i++){
-    apple_pos[i] = 0;         // Array to store all the positions of the apples
+        apple_pos[i] = 0;         // Array to store all the positions of the apples
     }
     player_front = -1, player_rear = -1; 
 
