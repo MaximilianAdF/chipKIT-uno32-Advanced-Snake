@@ -118,13 +118,13 @@ int create_apple(int TMR2copy) {
 void generate_walls(){
     int i;
     for ( i = 1; i < 127; i++) {
-        bitmap[i+128] = 2;
-        bitmap[i+128*30] = 2;
+        bitmap[i+128] = 1;
+        bitmap[i+128*30] = 1;
     }
     int j;
     for ( j = 1; j < 31; j++) {
-        bitmap[j*128 + 1] = 2;
-        bitmap[j*128+126] = 2;
+        bitmap[j*128 + 1] = 1;
+        bitmap[j*128+126] = 1;
     }
 }
 
@@ -133,7 +133,7 @@ int check_obstacle(int *pos, char *vektor){
     int headX = *pos%128;
     int headY = *pos/128;
     if (*vektor == 'r') {
-        if (bitmap[headY*128 + (headX+2)%128] == 1 || bitmap[headY*128 + (headX+2)%128] == 2 || bitmap[headY*128 + (headX+2)%128] == 3) {
+        if (bitmap[headY*128 + (headX+2)%128] == 1 || bitmap[headY*128 + (headX+2)%128] == 2) {
             // Game over
             return 1;
         }
@@ -149,7 +149,7 @@ int check_obstacle(int *pos, char *vektor){
         }
     }
     else if (*vektor == 'l') {
-        if (bitmap[headY*128 + (headX+128-1)%128] == 1 || bitmap[headY*128 + (headX+128-1)%128] == 2 || bitmap[headY*128 + (headX+128-1)%128] == 3) {
+        if (bitmap[headY*128 + (headX+128-1)%128] == 1 || bitmap[headY*128 + (headX+128-1)%128] == 2) {
             // Game over
             return 1;
         }
@@ -166,7 +166,7 @@ int check_obstacle(int *pos, char *vektor){
         }
     }
     else if (*vektor == 'u') {
-        if (bitmap[((headY+32-1)%32)*128 + headX] == 1 || bitmap[((headY+32-1)%32)*128 + headX] == 2 || bitmap[((headY+32-1)%32)*128 + headX] == 3) {
+        if (bitmap[((headY+32-1)%32)*128 + headX] == 1 || bitmap[((headY+32-1)%32)*128 + headX] == 2) {
             // Game over
             return 1;
         }
@@ -183,7 +183,7 @@ int check_obstacle(int *pos, char *vektor){
         }
     }
     else if (*vektor == 'd') {
-        if (bitmap[((headY+2)%32)*128 + headX] == 1 || bitmap[((headY+2)%32)*128 + headX] == 2 || bitmap[((headY+2)%32)*128 + headX] == 3) {
+        if (bitmap[((headY+2)%32)*128 + headX] == 1 || bitmap[((headY+2)%32)*128 + headX] == 2) {
             // Game over
             return 1;
         }
