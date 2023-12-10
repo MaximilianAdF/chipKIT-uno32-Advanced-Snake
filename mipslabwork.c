@@ -21,6 +21,10 @@ int AI;
 int wallInfinite;   // 0 = Infinite wall, 1 = Walls on
 int snakeSpeed;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 
+int ai_max=0;
+int player_max=5;
+
+
 int timeoutcount=0;
 char btn = 'r';
 int player_dead;
@@ -61,6 +65,7 @@ void user_isr( void ) {
                 AI_dead = movement(0, &AI_head, &AI_end, &AI_vektor, 1);
             }
             player_dead=movement(0, &player_head, &player_end, &player_vektor, 0);
+
             
             timeoutcount=0;
             }
@@ -96,7 +101,7 @@ void labinit( void )
     return;
 }
 
-void game_init(int speed, int apples, int walls, int ai,int *game){
+void game_init(int speed, int apples, int walls, int ai,int *game, int ai_dificulty){
     
     last_apple = -apples;
     appleCount = apples;
@@ -111,6 +116,7 @@ void game_init(int speed, int apples, int walls, int ai,int *game){
         generate_walls();
     }
     if (ai == 1) {
+        ai_max= 5 + ai_dificulty*2;
         init_snake(AI_head); //Create the AI's snake
         int i = 0;
         for (i; i < 4; i++) { //Initial movements that AI does (account initial tail)
@@ -150,13 +156,16 @@ void game_reset(){
     player_vektor = 'r';       // r = right, l = left, u = up, d = down
 
 
-    AI_head = 128 * 14 + 120;      //AI snake pos
-    AI_end = 128 * 14 + 124;       //AI snake tail
+    AI_head = 128 * 15 - 8;      //AI snake pos
+    AI_end = 128 * 15 - 4;       //AI snake tail
     AI_vektor = 'l';
+    ai_score=0;
+
     player_front = -1, player_rear = -1; 
     ai_front = -1, ai_rear = -1;
     timeoutcount=0;
     btn = 'r';
+
 }
 
 
@@ -172,7 +181,14 @@ int labwork(int *score) {
     btn = getbtns(btn);
     display_bit_update();
     *score=currScore;
-
+    if (AI==1){
+        if(ai_max==ai_score || player_dead==1){
+            return 2;
+        }else if(currScore==player_max|| AI_dead==1){
+            return 3;
+        }
+    }
     return player_dead;
+
 }
 

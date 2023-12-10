@@ -1,33 +1,4 @@
-/*
-två dimetionell map av skärmen 128*32 pixlar
-ormen:
-    en unik punkt som huvudet och en annan unik punkt som svansen + icke unika mitt mitar
-    för flyttar sig en pixel fram per uppdatering,
-        fram är definerad genom huvud och föredetta platsen huvudet var på
-        svänger genom att få instuktion att nästa steg är till höger eller vänster om huvudet
 
-äpplen:
-    random position i mappen som inte är huvud,svans eller krop.
-
-mecaniks:
-    titta vad nästa position av huvudet är
-        väg: dö
-        krop:dö
-        svans: inget
-        äpple: ta inte bort svans, gå fram med huvud och ta bort äpple+ spawna nytt
-förflytnings cykel:
-    1. titta vart är "fram"
-    2. titta input
-    3. titta vart hamnar huvud
-        1. om äpple
-        2. om vägg
-        3. om sig själv
-        4. om svans
-    4. sätt huvud pixel på nästa steg !! stack!! upp = -128; ned = +128; höger= +1; vänster = -1
-    5. ta bort gamla
-    6.1 om inget äpple,tabort svans och gör den framför till svans
-    6.2 om äpple, gör inget
-*/
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 //#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"
@@ -57,6 +28,7 @@ int AI_head = 128 * 14 + 120;      //AI snake pos
 int AI_end = 128 * 14 + 124;       //AI snake tail
 char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
+int ai_score=0;
 
 void push(int x, char arr[], int *front, int *rear) {
     if (*front == -1) {
@@ -255,6 +227,8 @@ int movement(uint8_t button, int *pos, int *end, char *vektor, int AI){
     if (next_step == 4) {
         if (AI != 1) {
             currScore++;
+        }else if (AI==1){
+            ai_score++;
         }
         appleCC++;
     }
