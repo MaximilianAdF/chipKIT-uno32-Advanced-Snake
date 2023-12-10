@@ -182,18 +182,13 @@ int labwork(int *score) {
     display_bit_update();
     *score=currScore;
     if (AI==1){
-        if(ai_max==ai_score){
+        if(ai_max==ai_score || player_dead==1){
             return 2;
-        }else if(currScore==player_max){
+        }else if(currScore==player_max|| AI_dead==1){
             return 3;
         }
-        else{
-            return player_dead;
-        }
-
-    }else{
-        return player_dead;
     }
+    return player_dead;
 
 }
 
