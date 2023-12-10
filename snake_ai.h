@@ -38,67 +38,6 @@ void get_safe_moves(int head) {
     }
 }
 
-char go_center(int head, char vektor) {
-    // Constants
-    int centerX = 64;
-    int centerY = 15;
-
-    // Head coordinates
-    int headX = head % 128;
-    int headY = head / 128;
-
-    // Update get safe moves
-    get_safe_moves(head);
-
-    // Logic to go towards the center
-    if (headX < centerX) { // To the left of center
-        if (headY == centerY) {
-            if (safeMoves[2] == 'u') {
-                return 'u';
-            } else if (safeMoves[3] == 'd') {
-                return 'd';
-            }
-        }
-        if (safeMoves[0] == 'r' && vektor != 'l') {
-            return 'r';
-        }
-    } else if (headX > centerX) { // To the right of center
-        if (headY == centerY) {
-            if (safeMoves[2] == 'u') {
-                return 'u';
-            } else if (safeMoves[3] == 'd') {
-                return 'd';
-            }
-        }
-        if (safeMoves[1] == 'l' && vektor != 'r') {
-            return 'l';
-        }
-    } else if (headY < centerY) { // Above center
-        if (headX == centerX) {
-            if (safeMoves[0] == 'r') {
-                return 'r';
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
-            }
-        }
-        if (safeMoves[2] == 'u' && vektor != 'd') {
-            return 'u';
-        }
-    } else if (headY > centerY) { // Below center
-        if (headX == centerX) {
-            if (safeMoves[0] == 'r') {
-                return 'r';
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
-            }
-        }
-        if (safeMoves[3] == 'd' && vektor != 'u') {
-            return 'd';
-        }
-    }
-    return vektor;
-}
-
 char get_direction(int head, int final_pos, int vektor, int walls) {
     //Add walls = 1 or 0 functionality
     int finalX = final_pos%128;
