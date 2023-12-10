@@ -1,13 +1,5 @@
-#include <stdint.h>
-//#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"
-#include "\msys64\opt\mcb32tools\include\pic32mx.h"
-#include "mipslab.h"
-#include <stdlib.h>
-#include "snake.h"
-
-int currApple = 2048; //The position of the apple that the AI is currently going for
-int minDist = 4096; //The distance between the AI head and the apple that the AI is currently going for
-int flag = 0; //Flag to check if we have found an apple that is closer to the AI than the player
+#include <stdio.h>
+char bitmap[4096] = {};
 
 char* get_safe_moves(int head) {
     static char temp[4] = {'0', '0', '0', '0'};
@@ -26,67 +18,6 @@ char* get_safe_moves(int head) {
     return temp;
 }
 
-char go_center(int head, char vektor) {
-    // Constants
-    int centerX = 64;
-    int centerY = 15;
-
-    // Head coordinates
-    int headX = head % 128;
-    int headY = head / 128;
-
-    // Get safe moves
-    char* safeMoves = get_safe_moves(head);
-
-    // Logic to go towards the center
-    if (headX < centerX) { // To the left of center
-        if (headY == centerY) {
-            if (safeMoves[2] == 'u') {
-                return 'u';
-            } else if (safeMoves[3] == 'd') {
-                return 'd';
-            }
-        }
-        if (safeMoves[0] == 'r' && vektor != 'l') {
-            return 'r';
-        }
-    } else if (headX > centerX) { // To the right of center
-        if (headY == centerY) {
-            if (safeMoves[2] == 'u') {
-                return 'u';
-            } else if (safeMoves[3] == 'd') {
-                return 'd';
-            }
-        }
-        if (safeMoves[1] == 'l' && vektor != 'r') {
-            return 'l';
-        }
-    } else if (headY < centerY) { // Above center
-        if (headX == centerX) {
-            if (safeMoves[0] == 'r') {
-                return 'r';
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
-            }
-        }
-        if (safeMoves[2] == 'u' && vektor != 'd') {
-            return 'u';
-        }
-    } else if (headY > centerY) { // Below center
-        if (headX == centerX) {
-            if (safeMoves[0] == 'r') {
-                return 'r';
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
-            }
-        }
-        if (safeMoves[3] == 'd' && vektor != 'u') {
-            return 'd';
-        }
-    }
-    return vektor;
-}
-
 char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     //Add wallInfinite = 1 or 0 functionality
     int finalX = final_pos%128;
@@ -95,6 +26,7 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     int headY = head/128;
     int distX = headX - finalX;
     int distY = headY - finalY;
+    printf("headX: %d, headY: %d, finalX: %d, finalY: %d, distX: %d, distY: %d\n", headX, headY, finalX, finalY, distX, distY);
 
     char* safeMoves = get_safe_moves(head); //r, l, u, d
     if (wallInfinite == 0) {
@@ -253,65 +185,11 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     return vektor; //If no other option, continue in same direction (Most likely dead)
 }
 
-int min_dist(int head, int final_pos, int wallInfinite) {
-    //wallInfinite = 1 or 0 functionality, finds the shortest distance between two points on the board
-    int headX = head%128;
-    int headY = head/128;
-    int finalX = final_pos%128;
-    int finalY = final_pos/128;
+int main() {
+    int currPos = 128 * 15 - 8;
+    int finalPos = 128 * 3 + 4;
 
-    int diffX = headX - finalX;
-    if (diffX < 0) {
-        diffX = -diffX;
-    }
-    int diffY = headY - finalY;
-    if (diffY < 0) {
-        diffY = -diffY;
-    }
-
-    if (wallInfinite == 0) {
-        if (diffX > 64) {
-            diffX = 128 - diffX;
-        }
-        if (diffY > 16) {
-            diffY = 32 - diffY;
-        }
-    }
-
-    return diffX + diffY;
+    char l = get_direction(128*3 +4, finalPos, 'r', 0);
+    printf("%c\n", l);
+    return 0;
 }
-
-char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
-    int totalDiffPlayer;
-    int totalDiffAI;
-
-
-    int i = 0;
-    for (i; i < appleCount; i++) {
-        if (apple_pos[i] == 0) {
-            continue;
-        }
-        if (bitmap[currApple] != 4) {
-            minDist = 4096;
-            flag = 0;
-        }
-
-        //Calculate distance between player head and apple (wallInfinite = 0,1)
-        totalDiffPlayer = min_dist(player_head, apple_pos[i], wallInfinite);
-        //Calculate distance between AI head and apple (wallInfinite = 0,1)
-        totalDiffAI = min_dist(AI_head, apple_pos[i], wallInfinite);  
-
-        //if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
-        if (totalDiffAI < minDist) {
-            currApple = apple_pos[i];
-            minDist = totalDiffAI;
-            flag = 1;
-        }
-    }
-    return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
-    //if (flag == 1) {
-        //return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
-    //}
-    //return go_center(AI_head, AI_vektor);
-}
-
