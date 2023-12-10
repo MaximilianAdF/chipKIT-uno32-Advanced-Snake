@@ -30,29 +30,59 @@ char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
 int ai_score=0;
 
+/*
+ Generate the outline of the snake game (the walls) 
+ incase infinite walls game mode has not been selected
+*/
+void generate_walls(){
+    int i;
+    for ( i = 1; i < 127; i++) {
+        bitmap[i+128] = 1;
+        bitmap[i+128*30] = 1;
+    }
+    int j;
+    for ( j = 1; j < 31; j++) {
+        bitmap[j*128 + 1] = 1;
+        bitmap[j*128+126] = 1;
+    }
+}
+
+/*
+ Generates obstacle at with the top left corner at tl
+ 4x4 obstacles with hollow 2x2 centers.
+*/
 void generate_bomb(int tl) {
     int i;
     //Bottom & top
-    for (i = 0; i < 4;i++) {
+    for (i = 0; i < 4;) {
         bitmap[tl+i] = 1;
         bitmap[tl+i+3*128] = 1;
     }
     int j;
     //Left & right
-    for (j = 1; j < 3;j++) {
+    for (j = 1; j < 3;) {
         bitmap[tl+j*128] = 1;
         bitmap[tl+j*128+3] = 1;
     }
 }
 
-void generate_obstacle(int map){
+/*
+ Generates a map with different difficulties depending on the input from menu
+ Ranges from map 1 (standard map) to map 5 (hardest map)
+*/
+void generate_map(int map){
     if(map==1) { // 0 obstacles
         return;
     }
     if(map==2) {
+        int i;
+        for (i = 3; i < 64; i++) {
+            bitmap[i+2*128] = 1;
+            bitmap[4096-2*128-i] = 1;
+        }
         int j;
-        for (j = 1; j < 4; j++) {
-            generate_bomb(2400/j);
+        for (j = 1; j < 4; i++) {
+            generate_bomb(2400/j)
         }
     }
     if(map==3){
@@ -65,6 +95,9 @@ void generate_obstacle(int map){
 
 }
 
+/*
+ Pushes an element to the queue
+*/
 void push(int x, char arr[], int *front, int *rear) {
     if (*front == -1) {
         *front = 0;
@@ -74,6 +107,9 @@ void push(int x, char arr[], int *front, int *rear) {
     arr[*rear] = x;
 }
 
+/*
+ Pops an element from the queue
+*/
 int pop(char arr[], int *front, int *rear) {
     if (*front == -1) {
         return -1; // Assuming -1 is an invalid value; you can choose a different approach
@@ -88,6 +124,9 @@ int pop(char arr[], int *front, int *rear) {
     return poppedElem;
 }
 
+/*
+ Initializes the snake at the position pos
+*/
 void init_snake(int pos) {
     int i = 0;
     for (i; i < 6; i++) {
@@ -96,6 +135,9 @@ void init_snake(int pos) {
     }
 }
 
+/*
+ Creates an apple (2x2) at a random position on the map using the value of TMR2 as seed
+*/
 int create_apple(int TMR2copy) {
     int appleX = ((TMR2copy % 61) + 1)*2;  // Ensures appleX is >= 3, odd, and < 127
     int appleY = ((TMR2copy % 13) + 1)*2;   // Ensures appleY is >= 2, even, and < 31
@@ -119,23 +161,8 @@ int create_apple(int TMR2copy) {
 }
 
 /*
- Generate the outline of the snake game (the walls) 
- incase infinite walls game mode has not been selected
+ Checks if the snake has collided with an obstacle in the next pixel update
 */
-void generate_walls(){
-    int i;
-    for ( i = 1; i < 127; i++) {
-        bitmap[i+128] = 1;
-        bitmap[i+128*30] = 1;
-    }
-    int j;
-    for ( j = 1; j < 31; j++) {
-        bitmap[j*128 + 1] = 1;
-        bitmap[j*128+126] = 1;
-    }
-}
-
-
 int check_obstacle(int *pos, char *vektor){
     int headX = *pos%128;
     int headY = *pos/128;
@@ -209,7 +236,9 @@ int check_obstacle(int *pos, char *vektor){
     return 0;
 }
 
-
+/*
+ Removes the last pixels (2x1) of the snake and updates the end position of the snake
+*/
 void movement_remove(int *end, int AI) { 
     int endX = *end%128;
     int endY = *end/128;
@@ -242,6 +271,9 @@ void movement_remove(int *end, int AI) {
     }
 }
 
+/*
+ Updates the snake's head postion (2x1) 
+*/
 int movement(uint8_t button, int *pos, int *end, char *vektor, int AI){
 
     if(button=='l' && *vektor != 'r'){
