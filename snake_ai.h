@@ -278,7 +278,7 @@ char get_direction(int head, int final_pos, int vektor, int walls) {
             return vektor;
         }
         if (vektor != 'r' && safeMoves[1] == 'l') { // If not travelling right and can go left, go left
-            return 'l'
+            return 'l';
         }
         if ((vektor == 'r' || vektor == 'l')) { // On same y level but travelling in wrong direction, need to flip (go up or down)
             if (safeMoves[2] == 'u') {
