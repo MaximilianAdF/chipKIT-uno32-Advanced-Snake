@@ -50,18 +50,17 @@ void user_isr( void ) {
     if (IFS(0) & 0x0100 && player_dead!=1) {
         char dir = init_ai(AI_head, AI_vektor, wallInfinite); 
         if(timeoutcount==(6-snakeSpeed)){
-            player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
             if (AI == 1) {
                 AI_dead = movement(dir, &AI_head, &AI_end, &AI_vektor, 1);
             }
-            
+            player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
         }
         
         if (timeoutcount==(6-snakeSpeed)*2){
-            player_dead=movement(0, &player_head, &player_end, &player_vektor, 0);
             if (AI == 1) {
                 AI_dead = movement(0, &AI_head, &AI_end, &AI_vektor, 1);
             }
+            player_dead=movement(0, &player_head, &player_end, &player_vektor, 0);
             
             timeoutcount=0;
             }
