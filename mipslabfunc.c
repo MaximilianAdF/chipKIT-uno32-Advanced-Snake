@@ -32,63 +32,7 @@ void quicksleep(int cyc) {
 	int i;
 	for(i = cyc; i > 0; i--);
 }
-
-/* tick:
-   Add 1 to time in memory, at location pointed to by parameter.
-   Time is stored as 4 pairs of 2 NBCD-digits.
-   1st pair (most significant byte) counts days.
-   2nd pair counts hours.
-   3rd pair counts minutes.
-   4th pair (least significant byte) counts seconds.
-   In most labs, only the 3rd and 4th pairs are used. */
-void tick( unsigned int * timep )
-{
-  /* Get current value, store locally */
-  register unsigned int t = * timep;
-  t += 1; /* Increment local copy */
-  
-  /* If result was not a valid BCD-coded time, adjust now */
-
-  if( (t & 0x0000000f) >= 0x0000000a ) t += 0x00000006;
-  if( (t & 0x000000f0) >= 0x00000060 ) t += 0x000000a0;
-  /* Seconds are now OK */
-
-  if( (t & 0x00000f00) >= 0x00000a00 ) t += 0x00000600;
-  if( (t & 0x0000f000) >= 0x00006000 ) t += 0x0000a000;
-  /* Minutes are now OK */
-
-  if( (t & 0x000f0000) >= 0x000a0000 ) t += 0x00060000;
-  if( (t & 0x00ff0000) >= 0x00240000 ) t += 0x00dc0000;
-  /* Hours are now OK */
-
-  if( (t & 0x0f000000) >= 0x0a000000 ) t += 0x06000000;
-  if( (t & 0xf0000000) >= 0xa0000000 ) t = 0;
-  /* Days are now OK */
-
-  * timep = t; /* Store new value */
-}
-
-/* display_debug
-   A function to help debugging.
-
-   After calling display_debug,
-   the two middle lines of the display show
-   an address and its current contents.
-
-   There's one parameter: the address to read and display.
-
-   Note: When you use this function, you should comment out any
-   repeated calls to display_image; display_image overwrites
-   about half of the digits shown by display_debug.
-*/   
-void display_debug( volatile int * const addr )
-{
-  display_string( 1, "Addr" );
-  display_string( 2, "Data" );
-  num32asc( &textbuffer[1][6], (int) addr );
-  num32asc( &textbuffer[2][6], *addr );
-  display_update();
-}
+	
 
 uint8_t spi_send_recv(uint8_t data) {
 	while(!(SPI2STAT & 0x08));

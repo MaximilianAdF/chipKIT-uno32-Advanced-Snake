@@ -14,24 +14,9 @@ void display_update(void);
 uint8_t spi_send_recv(uint8_t data);
 
 /* Declare lab-related functions from mipslabfunc.c */
-char * itoaconv( int num );
 int labwork();
 void quicksleep(int cyc);
-void tick( unsigned int * timep );
 
-/* Declare display_debug - a function to help debugging.
-
-   After calling display_debug,
-   the two middle lines of the display show
-   an address and its current contents.
-
-   There's one parameter: the address to read and display.
-
-   Note: When you use this function, you should comment out any
-   repeated calls to display_image; display_image overwrites
-   about half of the digits shown by display_debug.
-*/
-void display_debug( volatile int * const addr );
 
 /* Declare bitmap array containing font */
 extern const uint8_t const font[128*8];
@@ -39,10 +24,8 @@ extern const uint8_t const font[128*8];
 extern char textbuffer[4][16];
 
 
-/*min*/
+/* Declare bitmap for snake map */
 extern char bitmap[4096];
-//extern const uint8_t const positioner[4096];
-
 
 
 /* Declare functions written by students.
@@ -50,10 +33,7 @@ extern char bitmap[4096];
    students must define their functions with the exact types
    specified in the laboratory instructions. */
 /* Written as part of asm lab: delay, time2string */
-void delay(int);
-/* Written as part of i/o lab: getbtns, getsw, enable_interrupt */
 char getbtns(char);
-int getsw(void);
 void enable_interrupt(void);
 void disable_interrupt(void);
 

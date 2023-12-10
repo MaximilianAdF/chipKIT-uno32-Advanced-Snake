@@ -5,6 +5,8 @@
 
    This file should be changed by YOU! So you must
    add comment(s) here with your name(s) and date(s):
+   2023-12-10 by Maximilian Alvim de Faria
+   2023-12-10 by Alfred Malmström
 
    This file modified 2017-04-31 by Ture Teknolog 
 
