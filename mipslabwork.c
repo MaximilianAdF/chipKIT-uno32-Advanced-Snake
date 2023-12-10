@@ -58,7 +58,6 @@ void user_isr( void ) {
                 AI_dead = movement(dir, &AI_head, &AI_end, &AI_vektor, 1);
             }
             player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
-            
         }
         
         if (timeoutcount==(6-snakeSpeed)*2){
