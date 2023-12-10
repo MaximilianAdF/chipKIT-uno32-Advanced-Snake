@@ -21,7 +21,6 @@
 
 int AI;
 int wallInfinite;   // 0 = Infinite wall, 1 = Walls on
-int snakeSpeed;     // 1 = 2pixel updates per second, 2 = 4 pixel updates per second....
 
 int ai_max=0;
 int player_max=5;
@@ -55,14 +54,14 @@ char getbtns(char btn){
 void user_isr( void ) {
     if (IFS(0) & 0x0100 && player_dead!=1) {
         char dir = init_ai(AI_head, AI_vektor, wallInfinite); 
-        if(timeoutcount==(6-snakeSpeed)){
+        if(timeoutcount==(3)){
             if (AI == 1) {
                 AI_dead = movement(dir, &AI_head, &AI_end, &AI_vektor, 1);
             }
             player_dead=movement(btn, &player_head, &player_end, &player_vektor, 0);
         }
         
-        if (timeoutcount==(6-snakeSpeed)*2){
+        if (timeoutcount==6){
             if (AI == 1) {
                 AI_dead = movement(0, &AI_head, &AI_end, &AI_vektor, 1);
             }
@@ -113,9 +112,6 @@ void game_init(int map_dif, int apples, int walls, int ai,int *game, int ai_difi
     if(map_dif!=0){
         generate_obstacle(map_dif);
     }
-
-
-
 
     wallInfinite = walls;
 
