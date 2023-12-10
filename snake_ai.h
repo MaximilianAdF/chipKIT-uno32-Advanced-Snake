@@ -99,8 +99,8 @@ char go_center(int head, char vektor) {
     return vektor;
 }
 
-char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
-    //Add wallInfinite = 1 or 0 functionality
+char get_direction(int head, int final_pos, int vektor, int walls) {
+    //Add walls = 1 or 0 functionality
     int finalX = final_pos%128;
     int finalY = final_pos/128;
     int headX = head%128;
@@ -109,16 +109,30 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     int distY = headY - finalY;
 
     get_safe_moves(head); //r, l, u, d
-    if (wallInfinite == 0) {
+    if (walls == 0) {
         //distX > 64 => (headX > finalX meaning AI is to the right and need to travel through right wall since distance is larger than half the board)
         if (distX > 64) { 
             if (vektor == 'r' && safeMoves[0] == 'r') { // If already travelling to right, continue.
                 return vektor;
             }
             if (vektor == 'l' || vektor == 'r') {
-                if (safeMoves[2] == 'u' && distY >= 0) {
-                    return 'u';
-                } else if (safeMoves[3] == 'd' && distY < 0) {
+                if (safeMoves[2] == 'u') {
+                    if (safeMoves[3] != 'd') {
+                        return 'u';
+                    }
+                    else if (-16 <= distY <= 0) {
+                        return 'd';
+                    }
+                    else if (distY < -16) {
+                        return 'u';
+                    }
+                    else if ( 0 < distY <= 16) {
+                        return 'u';
+                    }
+                    else if (distY > 16) {
+                        return 'd';
+                    }
+                } else if (safeMoves[3] == 'd') {
                     return 'd';
                 } else { // No option but to continue going left/right
                     return vektor;
@@ -135,9 +149,23 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
                 return vektor;
             }
             if (vektor == 'r' || vektor == 'l') { // On same y level but travelling in wrong direction, need to flip (go up or down)
-                if (safeMoves[2] == 'u' && distY >= 0) {
-                    return 'u';
-                } else if (safeMoves[3] == 'd' && distY < 0) {
+                if (safeMoves[2] == 'u') {
+                    if (safeMoves[3] != 'd') {
+                        return 'u';
+                    }
+                    else if (-16 <= distY <= 0) {
+                        return 'd';
+                    }
+                    else if (distY < -16) {
+                        return 'u';
+                    }
+                    else if ( 0 < distY <= 16) {
+                        return 'u';
+                    }
+                    else if (distY > 16) {
+                        return 'd';
+                    }
+                } else if (safeMoves[3] == 'd') {
                     return 'd';
                 } else { // No option but to continue going left/right
                     return vektor;
@@ -153,10 +181,24 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
             if (vektor == 'd' && safeMoves[3] == 'd') { // If already travelling down, continue.
                 return vektor;
             }
-            if ((vektor == 'u' || vektor == 'd')) { // On same x level but travelling in wrong direction, need to flip (go left or right)
-                if (safeMoves[0] == 'r' && distX < 0) {
-                    return 'r';
-                } else if (safeMoves[1] == 'l' && distX >= 0) {
+            if (vektor == 'u' || vektor == 'd') { // On same x level but travelling in wrong direction, need to flip (go left or right)
+                if (safeMoves[0] == 'r') {
+                    if (safeMoves[1] != 'l') {
+                        return 'r';
+                    }
+                    else if (-64 <= distX <= 0) { // AI to the left of apple and faster to go right than through left wall
+                        return 'r';
+                    }
+                    else if (distX < -64) { // AI to the left of apple and faster to go through left wall
+                        return 'l';
+                    }
+                    else if ( 0 < distX <= 64) { // AI to the right of apple and faster to go left than through right wall
+                        return 'l';
+                    }
+                    else if (distX > 64) { // AI to the right of apple and faster to go through right wall
+                        return 'r';
+                    }
+                } else if (safeMoves[1] == 'l') {
                     return 'l';
                 } else { // No option but to continue going up/down
                     return vektor;
@@ -172,10 +214,25 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
             if (vektor == 'u' && safeMoves[2] == 'u') { // If already travelling up, continue.
                 return vektor;
             }
-            if ((vektor == 'd' || vektor == 'u')) { // On same x level but travelling in wrong direction, need to flip (go left or right)
-                if (safeMoves[0] == 'r' && distX < 0) {
-                    return 'r';
-                } else if (safeMoves[1] == 'l' && distX >= 0) {
+            if (vektor == 'd' || vektor == 'u') { // On same x level but travelling in wrong direction, need to flip (go left or right)
+                if (safeMoves[0] == 'r') {
+                    if (safeMoves[1] != 'l') {
+                        return 'r';
+                    }
+                    else if (-64 <= distX <= 0) { // AI to the left of apple and faster to go right than through left wall
+                        return 'r';
+                    }
+                    else if (distX < -64) { // AI to the left of apple and faster to go through left wall
+                        return 'l';
+                    }
+                    else if ( 0 < distX <= 64) { // AI to the right of apple and faster to go left than through right wall
+                        return 'l';
+                    }
+                    else if (distX > 64) { // AI to the right of apple and faster to go through right wall
+                        return 'r';
+                    }
+
+                } else if (safeMoves[1] == 'l') {
                     return 'l';
                 } else { // No option but to continue going up/down
                     return vektor;
@@ -298,8 +355,8 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     return vektor; //If no other option, continue in same direction (Most likely dead)
 }
 
-int min_dist(int head, int final_pos, int wallInfinite) {
-    //wallInfinite = 1 or 0 functionality, finds the shortest distance between two points on the board
+int min_dist(int head, int final_pos, int walls) {
+    //walls = 1 or 0 functionality, finds the shortest distance between two points on the board
     int headX = head%128;
     int headY = head/128;
     int finalX = final_pos%128;
@@ -314,7 +371,7 @@ int min_dist(int head, int final_pos, int wallInfinite) {
         diffY = -diffY;
     }
 
-    if (wallInfinite == 0) {
+    if (walls == 0) {
         if (diffX > 64) {
             diffX = 128 - diffX;
         }
@@ -326,10 +383,8 @@ int min_dist(int head, int final_pos, int wallInfinite) {
     return diffX + diffY;
 }
 
-char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
-    int totalDiffPlayer;
+char init_ai(int AI_head, char AI_vektor, int walls) {
     int totalDiffAI;
-
 
     int i = 0;
     for (i; i < appleCount; i++) {
@@ -338,13 +393,9 @@ char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
         }
         if (bitmap[currApple] != 4) {
             minDist = 4096;
-            flag = 0;
         }
-
-        //Calculate distance between player head and apple (wallInfinite = 0,1)
-        totalDiffPlayer = min_dist(player_head, apple_pos[i], wallInfinite);
-        //Calculate distance between AI head and apple (wallInfinite = 0,1)
-        totalDiffAI = min_dist(AI_head, apple_pos[i], wallInfinite);  
+        //Calculate distance between AI head and apple (walls = 0,1)
+        totalDiffAI = min_dist(AI_head, apple_pos[i], walls);  
 
         //if (totalDiffAI < minDist && totalDiffAI < totalDiffPlayer) {
         if (totalDiffAI < minDist) {
@@ -352,6 +403,6 @@ char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
             minDist = totalDiffAI;
         }
     }
-    return get_direction(AI_head, currApple, AI_vektor, wallInfinite);
+    return get_direction(AI_head, currApple, AI_vektor, walls);
 }
 
