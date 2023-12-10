@@ -54,13 +54,13 @@ void generate_walls(){
 void generate_bomb(int tl) {
     int i;
     //Bottom & top
-    for (i = 0; i < 4;) {
+    for (i = 0; i < 4;i++) {
         bitmap[tl+i] = 1;
         bitmap[tl+i+3*128] = 1;
     }
     int j;
     //Left & right
-    for (j = 1; j < 3;) {
+    for (j = 1; j < 3;j++) {
         bitmap[tl+j*128] = 1;
         bitmap[tl+j*128+3] = 1;
     }
@@ -75,14 +75,9 @@ void generate_map(int map){
         return;
     }
     if(map==2) {
-        int i;
-        for (i = 3; i < 64; i++) {
-            bitmap[i+2*128] = 1;
-            bitmap[4096-2*128-i] = 1;
-        }
         int j;
-        for (j = 1; j < 4; i++) {
-            generate_bomb(2400/j)
+        for (j = 1; j < 4; j++) {
+            generate_bomb(2400/j);
         }
     }
     if(map==3){
