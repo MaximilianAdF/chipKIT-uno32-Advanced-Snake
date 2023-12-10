@@ -30,6 +30,21 @@ char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
 int ai_score=0;
 
+void generate_obstical(int map){
+    if(map==1){
+
+    }if(map==2){
+        
+    }if(map==3){
+        
+    }if(map==4){
+        
+    }if(map==5){
+        
+    }
+
+}
+
 void push(int x, char arr[], int *front, int *rear) {
     if (*front == -1) {
         *front = 0;

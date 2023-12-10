@@ -7,7 +7,7 @@ int current=1;
 int current_menu=0;
 
 /* values to determin game setings*/
-int snakespeed = 3;
+int map_dificulty = 0;
 int apples = 1;
 int number = 5;
 int walls = 1;
@@ -165,7 +165,7 @@ click(char input,int score){
         else if (current_menu==1){// checks if in modes menu
             if (current==0){ // game speed
                 current_menu=3;
-                number=snakespeed;
+                number=map_dificulty;
                 dificulty_text[39]=number+'0';
                 swap_text(dificulty_text);
                 }
@@ -191,7 +191,7 @@ click(char input,int score){
         }
 
         else if (current_menu==3){// checks if in game speed menu
-            snakespeed= number;
+            map_dificulty= number;
             current_menu=0;
             swap_text(main_text);
             current=1;
@@ -302,7 +302,7 @@ int menu(int *a, int *b, int *c, int *d, int score, char game,char winner,int*e)
         }
     }
     starter='0';
-    *a = snakespeed;
+    *a = map_dificulty;
     *b = apples;
     *c = walls;
     *d = ai;

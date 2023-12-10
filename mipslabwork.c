@@ -103,14 +103,26 @@ void labinit( void )
     return;
 }
 
-void game_init(int speed, int apples, int walls, int ai,int *game, int ai_dificulty){
+void game_init(int map_dif, int apples, int walls, int ai,int *game, int ai_dificulty){
     
     last_apple = -apples;
     appleCount = apples;
     appleCC = apples;
     AI = ai;
     
-    snakeSpeed = speed;
+    if(map_dif==1){
+
+    }else if(map_dif==2){
+    
+    }else if(map_dif==3){
+    
+    }else if(map_dif==4){
+    
+    }else if(map_dif==5){
+    
+    }
+
+
     wallInfinite = walls;
 
     init_snake(player_end); //Create the player's snake
