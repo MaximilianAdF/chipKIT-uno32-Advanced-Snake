@@ -13,6 +13,7 @@ int number = 5;
 int walls = 1;
 int ai = 0;
 int poss=0;
+int ai_dif=0;
 
 /* test files difficulty*/
 char text[]="     Snake      >    start           modes         highscore    ";
@@ -24,6 +25,7 @@ char apple_text[]="     Apple             V               1               ^     
 char wall_text[]="     Walls?                     >     off             on  ";
 char ai_text[]="   YOU vs AI?                   >      off             on  ";
 char new_highscore_text[]=" New Highscore       V               AAA:___         ^         ";
+char ai_dif_text[]=">    LEVEL 1         LEVEL 2         LEVEL 3         LEVEL 4    ";
 
 char new_highscore(int score){
     int i,j;
@@ -55,15 +57,14 @@ char new_highscore(int score){
 }
 
 
-char gameover(int score,int opponent){
-    if(opponent>0){
-        if(score<opponent){
+char gameover(int score,int winner){
+    if(winner==2){
             swap_text("    Game over                       YOU LOSE               ");
         }
-        else{
+    else if(winner==3){
             swap_text("    Game over                       YOU WIN               ");
         }
-    }else{
+    else{
     swap_text("    Game over                                        ");
     }
     current_menu=10;
@@ -210,6 +211,8 @@ click(char input,int score){
                     walls=1;
                 } else{
                     ai=1;
+                    current_menu=7;
+                    swap_text(ai_dif_text);
                 }
             }else{
                 if(current_menu==5){
@@ -217,7 +220,13 @@ click(char input,int score){
                 } else{
                     ai=0;
                 }
+            current_menu=0;
+            swap_text(main_text);
+            current=1;
             }
+        }
+        else if(current_menu=7){
+            ai_dif=3-current;
             current_menu=0;
             swap_text(main_text);
             current=1;
@@ -268,11 +277,11 @@ click(char input,int score){
 }
 
 
-int menu(int *a, int *b, int *c, int *d, int score, char game){
+int menu(int *a, int *b, int *c, int *d, int score, char game,char winner,int*e){
     int temp=0;
     char input=0;
     if(game!=0){ // om ett spel har körts
-        gameover(score,temp);
+        gameover(score,winner);
         game=0;
     }else{
     display_string(0,text);
@@ -298,5 +307,6 @@ int menu(int *a, int *b, int *c, int *d, int score, char game){
     *b = apples;
     *c = walls;
     *d = ai;
+    *e = ai_dif;
     return;
 }

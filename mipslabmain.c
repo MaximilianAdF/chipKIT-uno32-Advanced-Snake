@@ -60,21 +60,22 @@ int main(void) {
 
 	display_init();
 
-	int num1,num2,num3,num4;
+	int num1,num2,num3,num4,num5;
 	int game = 0;
 	int score = 0;
-
+	char winner=0;
 	while(1){
-		menu(&num1, &num2, &num3, &num4,score,game);
-
-		game_init(num1, num2, num3, num4,&game);
+		
+		menu(&num1, &num2, &num3, &num4,score,game,winner,&num5);
+		winner=0;
+		game_init(num1, num2, num3, num4,&game,num5);
 		score = 0;
 		labinit(); /* Do any lab-specific initialization */
 		
-		char dead=0;
-			while( dead==0 )
+		
+			while( winner==0 )
 			{
-				dead=labwork(&score); /* Do lab-specific things again and again */
+				winner=labwork(&score); /* Do lab-specific things again and again */
 			}
 		
 		disable_interrupt();

@@ -57,6 +57,7 @@ int AI_head = 128 * 14 + 120;      //AI snake pos
 int AI_end = 128 * 14 + 124;       //AI snake tail
 char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
+int ai_score=0;
 
 void push(int x, char arr[], int *front, int *rear) {
     if (*front == -1) {
@@ -255,6 +256,8 @@ int movement(uint8_t button, int *pos, int *end, char *vektor, int AI){
     if (next_step == 4) {
         if (AI != 1) {
             currScore++;
+        }else if (AI==1){
+            ai_score++;
         }
         appleCC++;
     }
