@@ -188,24 +188,22 @@ click(char input,int score){
                 swap_text(ai_text);
                 current=2;
                 }
-                }
+        }
 
         else if (current_menu==3){// checks if in game speed menu
             snakespeed= number;
             current_menu=0;
             swap_text(main_text);
             current=1;
-
             }
+
         else if (current_menu==4){// checks if in apple menu
             apples= number;
             current_menu=0;
             swap_text(main_text);
             current=1;
-
-            
             }
-        else if(current_menu==5|| current_menu==6){
+        else if(current_menu==5|| current_menu==6){ // chacks if in ai or walls menue
             if(current==3){
                 if(current_menu==5){
                     walls=1;
@@ -220,19 +218,19 @@ click(char input,int score){
                 } else{
                     ai=0;
                 }
-            current_menu=0;
-            swap_text(main_text);
-            current=1;
+                current_menu=0;
+                swap_text(main_text);
+                current=1;
             }
         }
-        else if(current_menu=7){
+        else if(current_menu==7){
             ai_dif=3-current;
             current_menu=0;
             swap_text(main_text);
             current=1;
+            }
 
-        }
-        if(current_menu==11){
+        else if(current_menu==11){
             if(current==2){ //save and go to main menu
                 char old_score[7];
                 while(poss<4){
@@ -247,7 +245,6 @@ click(char input,int score){
                 current_menu=0;
                 swap_text(main_text);
                 current=1;
-  
             }else{
                 text[37+current]=number+'A';
                 text[21+current]=' ';
@@ -272,7 +269,6 @@ click(char input,int score){
             current_menu = 1;
             swap_text(mode_text);
         }
-
     }
 }
 
