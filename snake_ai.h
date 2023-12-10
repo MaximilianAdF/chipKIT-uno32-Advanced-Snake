@@ -446,6 +446,34 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     return vektor; //If no other option, continue in same direction (Most likely dead)
 }
 
+int min_dist(int head, int final_pos, int wallInfinite) {
+    //wallInfinite = 1 or 0 functionality, finds the shortest distance between two points on the board
+    int headX = head%128;
+    int headY = head/128;
+    int finalX = final_pos%128;
+    int finalY = final_pos/128;
+
+    int diffX = headX - finalX;
+    if (diffX < 0) {
+        diffX = -diffX;
+    }
+    int diffY = headY - finalY;
+    if (diffY < 0) {
+        diffY = -diffY;
+    }
+
+    if (wallInfinite == 0) {
+        if (diffX > 64) {
+            diffX = 128 - diffX;
+        }
+        if (diffY > 16) {
+            diffY = 32 - diffY;
+        }
+    }
+
+    return diffX + diffY;
+}
+
 char init_ai(int AI_head, char AI_vektor, int wallInfinite) {
     int totalDiffPlayer;
     int totalDiffAI;
