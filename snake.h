@@ -57,7 +57,7 @@ void generate_obstacle(int map){
         }
         int j;
         for (j = 1; j < 4; i++) {
-            generate_bomb(2400/j)
+            generate_bomb(2400/j);
         }
     }
     if(map==3){

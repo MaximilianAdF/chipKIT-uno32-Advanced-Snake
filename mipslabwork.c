@@ -110,17 +110,11 @@ void game_init(int map_dif, int apples, int walls, int ai,int *game, int ai_difi
     appleCC = apples;
     AI = ai;
     
-    if(map_dif==1){
-
-    }else if(map_dif==2){
-    
-    }else if(map_dif==3){
-    
-    }else if(map_dif==4){
-    
-    }else if(map_dif==5){
-    
+    if(map_dif!=0){
+        generate_obstacle(map_dif);
     }
+
+
 
 
     wallInfinite = walls;
