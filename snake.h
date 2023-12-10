@@ -1,4 +1,6 @@
 
+
+
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 //#include "/Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h"  /* Declarations of system-specific addresses etc */ ///Applications/mcb32tools.app/Contents/Resources/Toolchain/include/pic32mx.h
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"
@@ -52,6 +54,8 @@ void generate_walls(){
  4x4 obstacles with hollow 2x2 centers.
 */
 void generate_bomb(int tl) {
+    bitmap[tl+1+128]=1;
+    bitmap[tl+2+2*128]=1;
     int i;
     //Bottom & top
     for (i = 0; i < 4;i++) {
@@ -63,28 +67,47 @@ void generate_bomb(int tl) {
     for (j = 1; j < 3;j++) {
         bitmap[tl+j*128] = 1;
         bitmap[tl+j*128+3] = 1;
-    }
-}
+    }}
+
 
 /*
  Generates a map with different difficulties depending on the input from menu
  Ranges from map 1 (standard map) to map 5 (hardest map)
 */
 void generate_map(int map){
-    if(map==1) { // 0 obstacles
-        return;
+    if(map==1) { 
+        generate_bomb(60+12*128);
+        
     }
     if(map==2) {
-        int j;
-        for (j = 1; j < 4; j++) {
-            generate_bomb(2400/j);
-        }
+        generate_bomb(62+128*4);
+        generate_bomb(62+24*128);
     }
     if(map==3){
-        
+        generate_bomb(62+128*4);
+        generate_bomb(62+24*128);
+        generate_bomb(62+128*8);
+        generate_bomb(62+20*128);
     }if(map==4){
-        
+        int i;
+        for (i=0;i<2;i++){
+        generate_bomb(32+128*4 +60*i);
+        generate_bomb(32+24*128+60*i);
+        generate_bomb(32+128*8+60*i);
+        generate_bomb(32+20*128+60*i);
+        }
     }if(map==5){
+        int i;
+        for (i=0;i<2;i++){
+        generate_bomb(32+128*4 +60*i);
+        generate_bomb(32+24*128+60*i);
+        generate_bomb(32+128*8+60*i);
+        generate_bomb(32+20*128+60*i);
+        }
+        for(i=0;i<4;i++){
+            generate_bomb(60+12*128+i*4);
+        
+        }
         
     }
 

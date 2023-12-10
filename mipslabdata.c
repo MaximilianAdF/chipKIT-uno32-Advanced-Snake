@@ -1,6 +1,8 @@
 /* mipslabdata.c
    This file compiled 2015 by F Lundevall
    from original code written by Axel Isaksson
+	2023-12-10 by Maximilian Alvim de Faria
+   2023-12-10 by Alfred Malmström
 
    For copyright and licensing, see file COPYING */
 

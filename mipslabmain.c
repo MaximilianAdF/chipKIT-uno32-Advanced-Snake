@@ -3,6 +3,9 @@
    This file written 2015 by Axel Isaksson,
    modified 2015, 2017 by F Lundevall
 
+   modified 2023-12-10 by Alfred Malmström
+
+
    Latest update 2017-04-21 by F Lundevall
 
    For copyright and licensing, see file COPYING */

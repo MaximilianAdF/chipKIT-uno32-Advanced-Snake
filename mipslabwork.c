@@ -110,7 +110,7 @@ void game_init(int map_dif, int apples, int walls, int ai,int *game, int ai_difi
     AI = ai;
     
     if(map_dif!=0){
-        generate_obstacle(map_dif);
+        generate_map(map_dif);
     }
 
     wallInfinite = walls;
