@@ -151,8 +151,8 @@ void game_reset(){
     player_vektor = 'r';       // r = right, l = left, u = up, d = down
 
 
-    AI_head = 128 * 15 - 8;      //AI snake pos
-    AI_end = 128 * 15 - 4;       //AI snake tail
+    AI_head = 128 * 14 + 120;      //AI snake pos
+    AI_end = 128 * 14 + 124;       //AI snake tail
     AI_vektor = 'l';
     player_front = -1, player_rear = -1; 
     ai_front = -1, ai_rear = -1;

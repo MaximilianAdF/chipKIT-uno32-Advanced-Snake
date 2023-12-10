@@ -5,25 +5,38 @@
 #include <stdlib.h>
 #include "snake.h"
 
+char safeMoves[4] = {'0', '0', '0', '0'};
 int currApple = 2048; //The position of the apple that the AI is currently going for
 int minDist = 4096; //The distance between the AI head and the apple that the AI is currently going for
 int flag = 0; //Flag to check if we have found an apple that is closer to the AI than the player
 
-char* get_safe_moves(int head) {
-    static char temp[4] = {'0', '0', '0', '0'};
-    if (bitmap[head+2] != 1) {
-        temp[0] = 'r';
+void get_safe_moves(int head) {
+    int headX = head % 128;
+    int headY = head / 128;
+
+    if (bitmap[headY*128 + (headX+2)%128] != 1) {
+        safeMoves[0] = 'r';
+    } else {
+        safeMoves[0] = '0';
     }
-    if (bitmap[head-1] != 1) {
-        temp[1] = 'l';
+
+    if (bitmap[headY*128 + (headX+128-1)%128] != 1) {
+        safeMoves[1] = 'l';
+    } else {
+        safeMoves[1] = '0';
     }
-    if (bitmap[head-128] != 1) {
-        temp[2] = 'u';
+
+    if (bitmap[((headY+32-1)%32)*128 + headX] != 1) {
+        safeMoves[2] = 'u';
+    } else {
+        safeMoves[2] = '0';
     }
-    if (bitmap[head+2*128] != 1) {
-        temp[3] = 'd';
+
+    if (bitmap[((headY+2)%32)*128 + headX] != 1) {
+        safeMoves[3] = 'd';
+    } else {
+        safeMoves[3] = '0';
     }
-    return temp;
 }
 
 char go_center(int head, char vektor) {
@@ -35,8 +48,8 @@ char go_center(int head, char vektor) {
     int headX = head % 128;
     int headY = head / 128;
 
-    // Get safe moves
-    char* safeMoves = get_safe_moves(head);
+    // Update get safe moves
+    get_safe_moves(head);
 
     // Logic to go towards the center
     if (headX < centerX) { // To the left of center
@@ -96,7 +109,7 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     int distX = headX - finalX;
     int distY = headY - finalY;
 
-    char* safeMoves = get_safe_moves(head); //r, l, u, d
+    get_safe_moves(head); //r, l, u, d
     if (wallInfinite == 0) {
         //distX > 64 => (headX > finalX meaning AI is to the right and need to travel through right wall since distance is larger than half the board)
         if (distX > 64) { 

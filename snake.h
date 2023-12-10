@@ -53,8 +53,8 @@ char player_vektor = 'r';       // r = right, l = left, u = up, d = down
 int ai_front = -1, ai_rear = -1;
 char ai_prev_movm[SIZE];
 
-int AI_head = 128 * 15 - 8;      //AI snake pos
-int AI_end = 128 * 15 - 4;       //AI snake tail
+int AI_head = 128 * 14 + 120;      //AI snake pos
+int AI_end = 128 * 14 + 124;       //AI snake tail
 char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
 

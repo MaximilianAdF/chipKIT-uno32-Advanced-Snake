@@ -186,10 +186,10 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
 }
 
 int main() {
-    int currPos = 128 * 15 - 8;
-    int finalPos = 128 * 3 + 4;
+    int currPos = 128 * 14 + 120;
+    int finalPos = 128 * 4 + 4;
 
-    char l = get_direction(128*3 +4, finalPos, 'r', 0);
+    char l = get_direction(128*12 + 132, finalPos, 'r', 0);
     printf("%c\n", l);
     return 0;
 }
