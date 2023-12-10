@@ -30,12 +30,37 @@ char AI_vektor = 'l';            // r = right, l = left, u = up, d = down
 
 int ai_score=0;
 
-void generate_obstical(int map){
-    if(map==1){
+void generate_bomb(int tl) {
+    int i;
+    //Bottom & top
+    for (i = 0; i < 4;) {
+        bitmap[tl+i] = 1;
+        bitmap[tl+i+3*128] = 1;
+    }
+    int j;
+    //Left & right
+    for (j = 1; j < 3;) {
+        bitmap[tl+j*128] = 1;
+        bitmap[tl+j*128+3] = 1;
+    }
+}
 
-    }if(map==2){
-        
-    }if(map==3){
+void generate_obstacle(int map){
+    if(map==1) { // 0 obstacles
+        return;
+    }
+    if(map==2) {
+        int i;
+        for (i = 3; i < 64; i++) {
+            bitmap[i+2*128] = 1;
+            bitmap[4096-2*128-i] = 1;
+        }
+        int j;
+        for (j = 1; j < 4; i++) {
+            generate_bomb(2400/j)
+        }
+    }
+    if(map==3){
         
     }if(map==4){
         
