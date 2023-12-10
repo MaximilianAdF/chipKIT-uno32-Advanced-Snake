@@ -207,6 +207,9 @@ click(char input,int score){
             if(current==3){
                 if(current_menu==5){
                     walls=1;
+                    current_menu=0;
+                    swap_text(main_text);
+                    current=1;
                 } else{
                     ai=1;
                     current_menu=7;
