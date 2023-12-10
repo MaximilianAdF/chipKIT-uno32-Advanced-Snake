@@ -107,9 +107,8 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
     int headY = head/128;
     int distX = headX - finalX;
     int distY = headY - finalY;
-    printf("headX: %d, headY: %d, finalX: %d, finalY: %d, distX: %d, distY: %d\n", headX, headY, finalX, finalY, distX, distY);
 
-    char* safeMoves = get_safe_moves(head); //r, l, u, d
+    get_safe_moves(head); //r, l, u, d
     if (wallInfinite == 0) {
         //distX > 64 => (headX > finalX meaning AI is to the right and need to travel through right wall since distance is larger than half the board)
         if (distX > 64) { 
@@ -190,256 +189,109 @@ char get_direction(int head, int final_pos, int vektor, int wallInfinite) {
 
     //If AI's X coordinate is smaller than the apple's X coordinate => (AI is to the left of the apple, needs to go right)
     if (headX < finalX) {
-        if (vektor == 'r') { // Can only go up, down or right
-            if (safeMoves[0] == 'r') { // If already travelling to right, continue.
-                return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
+        if (vektor == 'r' && safeMoves[0] == 'r') { // If already travelling to right, continue.
+            return vektor;
+        }
+        if (vektor != 'l' && safeMoves[0] == 'r') { // If not travelling left and can go right, go right
+            return 'r';
+        }
+        if ((vektor == 'l' || vektor == 'r')) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+            if (safeMoves[2] == 'u') {
+                if (safeMoves[3] != 'd') {
                     return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
+                }
+                else if (distY >= 0) {
                     return 'u';
-                } else { // Apple is downwards, go down.
+                } 
+                else {
                     return 'd';
                 }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
-        }
-        if (vektor == 'l') { // Can only go up, down or left
-            if (safeMoves[1] == 'l') { // If already travelling to left, continue.
+            } else if (safeMoves[3] == 'd') {
+                return 'd';
+            } else { // No option but to continue going left
                 return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
-                    return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
-                    return 'u';
-                } else { // Apple is downwards, go down.
-                    return 'd';
-                }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
-        }
-        if (vektor == 'u') { // Can only go right, left or up
-            if (safeMoves[2] == 'u') { // If already travelling to up, continue.
-                return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
-                    return 'r';
-                } else if (distX >= 0) {
-                    return 'l';
-                } else { 
-                    return 'r';
-                }
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
-            }
-        }
-        if (vektor == 'd') {
-            if (safeMoves[3] == 'd') { // If already travelling to down, continue.
-                return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
-                    return 'r';
-                } else if (distX >= 0) {
-                    return 'l';
-                } else { 
-                    return 'r';
-                }
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
             }
         }
     }
     
     //If AI's X coordinate is larger than the apple's X coordinate => (AI is to the right of the apple, needs to go left)
     if (headX > finalX) {
-        if (vektor == 'r') { // Can only go up, down or right
-            if (safeMoves[0] == 'r') { // If already travelling to right, continue.
-                return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
+        //Add logic when travelling up/down and can't go left
+        if (vektor == 'l' && safeMoves[1] == 'l') { // If already travelling to left, continue.
+            return vektor;
+        }
+        if (vektor != 'r' && safeMoves[1] == 'l') { // If not travelling right and can go left, go left
+            return 'l'
+        }
+        if ((vektor == 'r' || vektor == 'l')) { // On same y level but travelling in wrong direction, need to flip (go up or down)
+            if (safeMoves[2] == 'u') {
+                if (safeMoves[3] != 'd') {
                     return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
+                }
+                else if (distY >= 0) {
                     return 'u';
-                } else { // Apple is downwards, go down.
+                } 
+                else {
                     return 'd';
                 }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
-        }
-        if (vektor == 'l') { // Can only go up, down or left
-            if (safeMoves[1] == 'l') { // If already travelling to left, continue.
+            } else if (safeMoves[3] == 'd') {
+                return 'd';
+            } else { // No option but to continue going right
                 return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
-                    return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
-                    return 'u';
-                } else { // Apple is downwards, go down.
-                    return 'd';
-                }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
-        }
-        if (vektor == 'u') { // Can only go right, left or up
-            if (safeMoves[2] == 'u') { // If already travelling to up, continue.
-                return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
-                    return 'r';
-                } else if (distX >= 0) {
-                    return 'l';
-                } else { 
-                    return 'r';
-                }
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
-            }
-        }
-        if (vektor == 'd') {
-            if (safeMoves[3] == 'd') { // If already travelling to down, continue.
-                return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
-                    return 'r';
-                } else if (distX >= 0) {
-                    return 'l';
-                } else { 
-                    return 'r';
-                }
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
             }
         }
     }
 
     //If AI's Y coordinate is smaller than the apple's Y coordinate => (AI is above the apple, needs to go down)
     if (headY < finalY) {
-        if (vektor == 'r') { // Can only go up, down or right
-            if (safeMoves[0] == 'r') { // If already travelling to right, continue.
-                return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
-                    return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
-                    return 'u';
-                } else { // Apple is downwards, go down.
-                    return 'd';
-                }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
+        if (vektor == 'd' && safeMoves[3] == 'd') { // If already travelling down, continue.
+            return vektor;
         }
-        if (vektor == 'l') { // Can only go up, down or left
-            if (safeMoves[1] == 'l') { // If already travelling to left, continue.
-                return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
-                    return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
-                    return 'u';
-                } else { // Apple is downwards, go down.
-                    return 'd';
-                }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
+        if (vektor != 'u' && safeMoves[3] == 'd') { // If not travelling up and can go down, go down
+            return 'd';
         }
-        if (vektor == 'u') { // Can only go right, left or up
-            if (safeMoves[2] == 'u') { // If already travelling to up, continue.
-                return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
+        if ((vektor == 'u' || vektor == 'd')) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+            if (safeMoves[0] == 'r') {
+                if (safeMoves[1] != 'l') {
                     return 'r';
-                } else if (distX >= 0) {
+                }
+                else if (distX < 0) {
+                    return 'r';
+                } 
+                else {
                     return 'l';
-                } else { 
-                    return 'r';
                 }
             } else if (safeMoves[1] == 'l') {
                 return 'l';
-            }
-        }
-        if (vektor == 'd') {
-            if (safeMoves[3] == 'd') { // If already travelling to down, continue.
+            } else { // No option but to continue going down
                 return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
-                    return 'r';
-                } else if (distX >= 0) {
-                    return 'l';
-                } else { 
-                    return 'r';
-                }
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
             }
         }
     }
 
     //If AI's Y coordinate is larger than the apple's Y coordinate => (AI is below the apple, needs to go up)
     if (headY > finalY) {
-        if (vektor == 'r') { // Can only go up, down or right
-            if (safeMoves[0] == 'r') { // If already travelling to right, continue.
-                return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
-                    return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
-                    return 'u';
-                } else { // Apple is downwards, go down.
-                    return 'd';
-                }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
+        if (vektor == 'u' && safeMoves[2] == 'u') { // If already travelling up, continue.
+            return vektor;
         }
-        if (vektor == 'l') { // Can only go up, down or left
-            if (safeMoves[1] == 'l') { // If already travelling to left, continue.
-                return vektor;
-            } else if (safeMoves[2] == 'u') { //If can go up
-                if (safeMoves[3] != 'd') { //If down is not an option, must go up regardless of path deviation
-                    return 'u';
-                } else if (distY >= 0) { // Apple is upwards, go up.
-                    return 'u';
-                } else { // Apple is downwards, go down.
-                    return 'd';
-                }
-            } else if (safeMoves[3] == 'd') {//If can go down
-                return 'd'; //Doesn't matter if apple is up/down.
-            }
+        if (vektor != 'd' && safeMoves[2] == 'u') { // If not travelling down and can go up, go up
+            return 'u';
         }
-        if (vektor == 'u') { // Can only go right, left or up
-            if (safeMoves[2] == 'u') { // If already travelling to up, continue.
-                return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
+        if ((vektor == 'd' || vektor == 'u')) { // On same x level but travelling in wrong direction, need to flip (go left or right)
+            if (safeMoves[0] == 'r') {
+                if (safeMoves[1] != 'l') {
                     return 'r';
-                } else if (distX >= 0) {
+                }
+                else if (distX < 0) {
+                    return 'r';
+                } 
+                else {
                     return 'l';
-                } else { 
-                    return 'r';
                 }
             } else if (safeMoves[1] == 'l') {
                 return 'l';
-            }
-        }
-        if (vektor == 'd') {
-            if (safeMoves[3] == 'd') { // If already travelling to down, continue.
+            } else { // No option but to continue going down
                 return vektor;
-            } else if (safeMoves[0] == 'r') { //If can go right
-                if (safeMoves[1] != 'l') { //If left is not an option, must go right regardless of path deviation
-                    return 'r';
-                } else if (distX >= 0) {
-                    return 'l';
-                } else { 
-                    return 'r';
-                }
-            } else if (safeMoves[1] == 'l') {
-                return 'l';
             }
         }
     }
