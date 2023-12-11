@@ -18,14 +18,14 @@ int ai_dif=0;
 /* test files difficulty*/
 char text[]="     Snake      >    start           modes         highscore    ";
 char main_text[]="     Snake      >    start           modes         highscore    ";
-char mode_text[]=">  DIFFICULTY        APPELS          WALLS          1 vs AI    ";
+char mode_text[]=">    MAPS           APPELS           WALL         YOU vs AI    ";
 char highscore_text[]="     ___:000         ___:000         ___:000         ___:000    ";
-char dificulty_text[]="   Dificulty           V               5               ^     "; 
+char dificulty_text[]="      MAP              V               5               ^     "; 
 char apple_text[]="     Apple             V               1               ^     ";
 char wall_text[]="     Walls?                     >     off             on  ";
 char ai_text[]="   YOU vs AI?                   >      off             on  ";
 char new_highscore_text[]=" New Highscore       V               AAA:___         ^         ";
-char ai_dif_text[]=">    LEVEL 1         LEVEL 2         LEVEL 3         LEVEL 4    ";
+char ai_dif_text[]=">    LEVEL 1         LEVEL 2         LEVEL 3         LEVEL 3     ";
 
 char new_highscore(int score){
     int i,j;

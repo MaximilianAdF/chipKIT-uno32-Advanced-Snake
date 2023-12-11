@@ -23,7 +23,7 @@ int AI;
 int wallInfinite;   // 0 = Infinite wall, 1 = Walls on
 
 int ai_max=0;
-int player_max=5;
+int player_max=7;
 
 
 int timeoutcount=0;
@@ -120,7 +120,7 @@ void game_init(int map_dif, int apples, int walls, int ai,int *game, int ai_difi
         generate_walls();
     }
     if (ai == 1) {
-        ai_max= 5 + ai_dificulty*2;
+        ai_max= 5 + ai_dificulty*3;
         init_snake(AI_head); //Create the AI's snake
         int i = 0;
         for (i; i < 4; i++) { //Initial movements that AI does (account initial tail)
