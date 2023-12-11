@@ -25,7 +25,7 @@ char apple_text[]="     Apple             V               1               ^     
 char wall_text[]="     Walls?                     >     off             on  ";
 char ai_text[]="   YOU vs AI?                   >      off             on  ";
 char new_highscore_text[]=" New Highscore       V               AAA:___         ^         ";
-char ai_dif_text[]=">    LEVEL 1         LEVEL 2         LEVEL 3         LEVEL 3     ";
+char ai_dif_text[]=">    LEVEL 1         LEVEL 2         LEVEL 3         LEVEL 4     ";
 
 char new_highscore(int score){
     int i,j;
