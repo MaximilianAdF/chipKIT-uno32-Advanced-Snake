@@ -105,7 +105,8 @@ void generate_map(int map){
         generate_bomb(32+20*128+60*i);
         }
         for(i=0;i<4;i++){
-            generate_bomb(60+12*128+i*4);
+            generate_bomb(54+12*128+i*4);
+            generate_bomb(54+16*128+i*4);
         
         }
         

@@ -95,9 +95,17 @@ void swap(input){ // moves arrow upp or down
     }
     else if(current_menu==3|| current_menu==4){//uppdow menu
         if(input=='d'){
-            if(number>1){
-                number--;
-                text[39]=number + '0';
+            if(current_menu==3){
+                if(number>0){
+                    number--;
+                    text[39]=number + '0';
+                }
+            }
+            else{
+                if(number>1){
+                    number--;
+                    text[39]=number + '0';
+                }
             }
         }
         if (input=='u'){
@@ -114,13 +122,13 @@ void swap(input){ // moves arrow upp or down
         if(input=='d'){
             if(number>0){
                 number--;
-                text[37+poss+current]=number + 'A';
+                text[37+current]=number + 'A';
             }
         }
         if (input=='u'){
             if (number<25){
                 number++;
-                text[37+poss+current]=number+ 'A';
+                text[37+current]=number+ 'A';
             }
         }
 
