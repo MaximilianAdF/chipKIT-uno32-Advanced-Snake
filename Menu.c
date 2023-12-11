@@ -3,7 +3,7 @@
 #include "\msys64\opt\mcb32tools\include\pic32mx.h"
 #include "mipslab.h"  /* Declatations for these labs */
 char starter='0';
-int current=1;
+int select=1;
 int current_menu=0;
 
 /* values to determin game setings*/
@@ -53,7 +53,7 @@ char new_highscore(int score){
     //ominte ett nytt highscore
     current_menu=0;
     swap_text(main_text);
-    current=1;
+    select=1;
 }
 
 
@@ -72,20 +72,20 @@ char gameover(int score,int winner){
 
 swap_funk(input, min){
         if(input=='d'){
-            text[current*16]=' ';// removes current arrow
-            current++;
-            if (current > 3){
-                current=min;
+            text[select*16]=' ';// removes select arrow
+            select++;
+            if (select > 3){
+                select=min;
             }
-            text[current*16]='>';// adds new arrow
+            text[select*16]='>';// adds new arrow
         }
         else if(input=='u'){
-            text[current*16]=' ';// removes
-            current--;
-            if (current< min){
-                current=3;
+            text[select*16]=' ';// removes
+            select--;
+            if (select< min){
+                select=3;
             }
-            text[current*16]='>'; // adds
+            text[select*16]='>'; // adds
         }
 }
 
@@ -122,13 +122,13 @@ void swap(input){ // moves arrow upp or down
         if(input=='d'){
             if(number>0){
                 number--;
-                text[37+current]=number + 'A';
+                text[37+select]=number + 'A';
             }
         }
         if (input=='u'){
             if (number<25){
                 number++;
-                text[37+current]=number+ 'A';
+                text[37+select]=number+ 'A';
             }
         }
 
@@ -141,12 +141,12 @@ void swap(input){ // moves arrow upp or down
     display_update();
 }
 
-swap_text(char new_text[]){// swaps the current text with disierd text
+swap_text(char new_text[]){// swaps the select text with disierd text
     int i;
     for (i = 0; i < 65; i++) { 
         text[i] = new_text[i]; 
     }
-    current=0;
+    select=0;
     display_string(0,text);
     display_update();
     
@@ -158,43 +158,43 @@ click(char input,int score){
 
     }else if(input=='r'){
         if(current_menu==0){ // checks if in start menu
-            if (current==1){
+            if (select==1){
                 starter='1';
             // game_start;
-            }else if (current==2){
+            }else if (select==2){
                 current_menu=1;
                 swap_text(mode_text);
-            }else if (current==3){
+            }else if (select==3){
             //highscore_display
                 current_menu=2;
                 swap_text(highscore_text);
             }
         }
         else if (current_menu==1){// checks if in modes menu
-            if (current==0){ // game speed
+            if (select==0){ // game speed
                 current_menu=3;
                 number=map_dificulty;
                 dificulty_text[39]=number+'0';
                 swap_text(dificulty_text);
                 }
 
-            else if (current==1){ //numbers of apples
+            else if (select==1){ //numbers of apples
                     current_menu=4;
                     number=apples;
                     apple_text[39]=number+'0';
                     swap_text(apple_text);
                 }
 
-            else if (current==2){ //no wall
+            else if (select==2){ //no wall
                 current_menu=5;
                 swap_text(wall_text);
-                current=2;
+                select=2;
                 }
 
-            else if (current==3){ // ai
+            else if (select==3){ // ai
                 current_menu=6;
                 swap_text(ai_text);
-                current=2;
+                select=2;
                 }
         }
 
@@ -202,22 +202,22 @@ click(char input,int score){
             map_dificulty= number;
             current_menu=0;
             swap_text(main_text);
-            current=1;
+            select=1;
             }
 
         else if (current_menu==4){// checks if in apple menu
             apples= number;
             current_menu=0;
             swap_text(main_text);
-            current=1;
+            select=1;
             }
         else if(current_menu==5|| current_menu==6){ // chacks if in ai or walls menue
-            if(current==3){
+            if(select==3){
                 if(current_menu==5){
                     walls=1;
                     current_menu=0;
                     swap_text(main_text);
-                    current=1;
+                    select=1;
                 } else{
                     ai=1;
                     current_menu=7;
@@ -231,18 +231,18 @@ click(char input,int score){
                 }
                 current_menu=0;
                 swap_text(main_text);
-                current=1;
+                select=1;
             }
         }
         else if(current_menu==7){
-            ai_dif=3-current;
+            ai_dif=3-select;
             current_menu=0;
             swap_text(main_text);
-            current=1;
+            select=1;
             }
 
         else if(current_menu==11){
-            if(current==2){ //save and go to main menu
+            if(select==2){ //save and go to main menu
                 char old_score[7];
                 while(poss<4){
                     int i ;
@@ -255,14 +255,14 @@ click(char input,int score){
                     }
                 current_menu=0;
                 swap_text(main_text);
-                current=1;
+                select=1;
             }else{
-                text[37+current]=number+'A';
-                text[21+current]=' ';
-                text[53+current]=' ';
-                text[22+current]='V';
-                text[54+current]='^';
-                current++;
+                text[37+select]=number+'A';
+                text[21+select]=' ';
+                text[53+select]=' ';
+                text[22+select]='V';
+                text[54+select]='^';
+                select++;
                 number=0;
                 display_string(0,text);
                 display_update();
@@ -274,7 +274,7 @@ click(char input,int score){
         if(current_menu==1 || current_menu==2){
             current_menu=0;
             swap_text(main_text);
-            current=1;
+            select=1;
         }
         else if(current_menu==3||current_menu==4||current_menu==5||current_menu==6){
             current_menu = 1;
