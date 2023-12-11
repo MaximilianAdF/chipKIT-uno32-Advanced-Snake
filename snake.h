@@ -51,7 +51,7 @@ void generate_walls(){
 
 /*
  Generates obstacle at with the top left corner at tl
- 4x4 obstacles with hollow 2x2 centers.
+ 4x4 obstacles with half hollow 2x2 centers.
 */
 void generate_bomb(int tl) {
     bitmap[tl+1+128]=1;
@@ -105,8 +105,8 @@ void generate_map(int map){
         generate_bomb(32+20*128+60*i);
         }
         for(i=0;i<4;i++){
-            generate_bomb(60+12*128+i*4);
-        
+            generate_bomb(60+10*128+i*4);
+            generate_bomb(60+14*128+i*4);
         }
         
     }
